@@ -24,13 +24,13 @@ header span {
     padding: 16px;
 }
 
-ul {
+header ul {
     list-style: none;
     margin: 0;
     padding-left: 0;
 }
 
-li {
+header li {
     background: #2a2a2a;
     display: block;
     float: left;
@@ -39,17 +39,17 @@ li {
     transition-duration: 0.5s;
 }
 
-li a {
+header li a {
     text-decoration: none;
     color: #f4f8f9;
 }
 
-li:hover {
+header li:hover {
     background: #3a3a3a;
     cursor: pointer;
 }
 
-ul li ul {
+header ul li ul {
     visibility: hidden;
     opacity: 0;
     position: absolute;
@@ -59,14 +59,14 @@ ul li ul {
     display: none;
 }
 
-ul li:hover>ul,
-ul li ul:hover {
+header ul li:hover>ul,
+header ul li ul:hover {
     visibility: visible;
     opacity: 1;
     display: block;
 }
 
-ul li ul li {
+header ul li ul li {
     clear: both;
     width: 100%;
 }
@@ -188,6 +188,43 @@ th {
     color: #f4f8f9;
     cursor: pointer;
     transition-duration: 0.5s;
+}
+
+
+/*menu*/
+
+.choose_culture {
+    height: 100px;
+    max-height: 100px;
+    max-width: 100px;
+    word-wrap: nowrap;
+    text-overflow: ellipsis;
+}
+
+.menu_culture {
+    max-height: 100px;
+    max-width: 100px;
+    word-wrap: nowrap;
+    text-overflow: ellipsis;
+    position: relative;
+    display: none;
+    background: #2a2a2a;
+    list-style: none;
+    padding-left: 0;
+}
+
+.menu_culture.active {
+    display: block;
+}
+
+.menu_culture li {
+    word-wrap: nowrap;
+    text-overflow: ellipsis;
+    padding: 5px;
+}
+
+.menu_culture li:hover {
+    background: #3a3a3a;
 }
 
 

@@ -2,6 +2,17 @@ radioOnCheck();
 initTable(0);
 initTable(1);
 initTable(2);
+menuCulture();
+
+function menuCulture() {
+    let menu = document.querySelector(".menu_culture");
+    document.querySelector("#set_culture").onclick = function(e) {
+        menu.style.top = e.clientY + "px";
+        menu.style.left = e.clientX + "px";
+        menu.classList.add("active");
+    };
+}
+
 function radioOnCheck() {
     let radios = document.querySelectorAll("input[type=\"radio\"]")
     let content0 = document.querySelector(".content0");
