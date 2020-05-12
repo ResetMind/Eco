@@ -94,13 +94,28 @@ ul li ul li {
 #table0,
 #table1,
 #table2 {
-    width: 2000px;
     border-style: solid;
     /*border-width: 1px 1px 0px;*/
     border-color: #3a3a3a;
     border-spacing: 0;
     font-size: 14px;
     table-layout: fixed;
+}
+
+#table0 {
+    width: 2000px;
+}
+
+#table1 {
+    width: 700px;
+}
+
+#table2 {
+    width: 300px;
+}
+
+.id_cell {
+    width: 15px;
 }
 
 #table0_body,

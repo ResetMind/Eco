@@ -127,22 +127,3 @@ function initTable(n) {
         return -1;
     }
 }
-
-/*table1_body.onclick = function(e) {
-    let cell = e.target;
-    let row = cell.parentElement;
-    let rows = row.parentElement.children;
-    for (var i = 0; i < rows.length; i++) {
-        if (rows[i] === row) {
-            break;
-        }
-    }
-    let columns = row.children;
-    for (var j = 0; j < columns.length; j++) {
-        if (columns[j] === cell) {
-            break;
-        }
-    }
-    alert('Row: ' + i + ', Column: ' + j);
-    table1_body.querySelector("tr:nth-child(" + (i + 1) + ")").style.background = "#3a3a3a";
-}*/
