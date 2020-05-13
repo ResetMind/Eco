@@ -2,15 +2,49 @@ radioOnCheck();
 initTable(0);
 initTable(1);
 initTable(2);
-menuCulture();
+let menu_culture = document.querySelector(".menu_culture");
+let menu_square = document.querySelector(".menu_square");
+setPopupMenu();
 
-function menuCulture() {
-    let menu = document.querySelector(".menu_culture");
-    document.querySelector("#set_culture").onclick = function(e) {
-        menu.style.top = e.clientY + "px";
-        menu.style.left = e.clientX + "px";
-        menu.classList.add("active");
-    };
+function setPopupMenu() {
+    onCellClick(1);
+    onCellClick(2);
+
+    function onCellClick(n) {
+        let cells, menu;
+        if (n == 2) {
+            cells = document.querySelectorAll("#set_culture");
+            menu = menu_culture;
+        } else if(n == 1) {
+            cells = document.querySelectorAll("#set_square");
+            menu = menu_square;
+        }
+        for (let i = 0; i < cells.length; i++) {
+            cells[i].onclick = function(e) {
+                if (e.button == 0) {
+                    let lis = document.querySelectorAll("#table" + n + "_body td:nth-child(2)");
+                    menu.innerHTML = "";
+                    for (let i = 0; i < lis.length; i++) {
+                        if (lis[i].innerHTML == "") {
+                            continue;
+                        }
+                        menu.innerHTML += "<li>" + lis[i].innerHTML + "</li>";
+                    }
+                    if (menu.innerHTML != "") {
+                        menu.style.top = e.clientY + "px";
+                        menu.style.left = e.clientX + "px";
+                        menu.classList.add("active");
+                        lis = menu.querySelectorAll("li");
+                        for(let i = 0; i < lis.length; i++) {
+                            lis[i].onclick = function(e) {
+                                console.log("e.target");
+                            }
+                        }
+                    }
+                }
+            };
+        }
+    }
 }
 
 function radioOnCheck() {
@@ -32,7 +66,7 @@ function radioOnCheck() {
                 content2.style.display = "block";
                 content0.style.display = "none";
                 content1.style.display = "none";
-            } 
+            }
         });
     }
 }
@@ -62,6 +96,8 @@ function initTable(n) {
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
+                /*menu_culture.classList.remove("active");
+                menu_square.classList.remove("active");*/
             }
         }
     }
@@ -73,6 +109,7 @@ function initTable(n) {
         table = document.querySelectorAll("#table" + n);
         cells = document.querySelectorAll("#table" + n + "_body td");
         cellOnFocus();
+        setPopupMenu();
     }
 
     content.onscroll = function() {
