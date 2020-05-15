@@ -5,6 +5,16 @@ initTable(2);
 let menu_culture = document.querySelector(".menu_culture");
 let menu_square = document.querySelector(".menu_square");
 setPopupMenu();
+let popup_cell = null;
+
+function hidePopupMenu() {
+    let e = window.event;
+    if (e.target !== menu_culture && e.target !== menu_square) {
+        menu_culture.classList.remove("active");
+        menu_square.classList.remove("active");
+        document.removeEventListener("click", hidePopupMenu);
+    }
+}
 
 function setPopupMenu() {
     onCellClick(1);
@@ -15,19 +25,24 @@ function setPopupMenu() {
         if (n == 2) {
             cells = document.querySelectorAll("#set_culture");
             menu = menu_culture;
-        } else if(n == 1) {
+        } else if (n == 1) {
             cells = document.querySelectorAll("#set_square");
             menu = menu_square;
         }
         for (let i = 0; i < cells.length; i++) {
             cells[i].onclick = function(e) {
                 if (e.button == 0) {
-                    let lis = document.querySelectorAll("#table" + n + "_body td:nth-child(2)");
+                    let arr = document.querySelectorAll("#table" + n + "_body td:nth-child(2)");
+                    let lis = Array();
+                    let notes = cells[i].innerHTML.split(", ");
+                    for (let i = 0; i < arr.length; i++) {
+                        if (notes.indexOf(arr[i].innerHTML) == -1 &&
+                            arr[i].innerHTML != "") {
+                            lis.push(arr[i]);
+                        }
+                    }
                     menu.innerHTML = "";
                     for (let i = 0; i < lis.length; i++) {
-                        if (lis[i].innerHTML == "") {
-                            continue;
-                        }
                         menu.innerHTML += "<li>" + lis[i].innerHTML + "</li>";
                     }
                     if (menu.innerHTML != "") {
@@ -35,9 +50,19 @@ function setPopupMenu() {
                         menu.style.left = e.clientX + "px";
                         menu.classList.add("active");
                         lis = menu.querySelectorAll("li");
-                        for(let i = 0; i < lis.length; i++) {
-                            lis[i].onclick = function(e) {
-                                console.log("e.target");
+                        for (let j = 0; j < lis.length; j++) {
+                            lis[j].onclick = function(e) {
+                                if (cells[i].innerHTML == "") {
+                                    cells[i].innerHTML += lis[j].innerHTML;
+                                } else {
+                                    cells[i].innerHTML += ", " + lis[j].innerHTML;
+                                }
+                                menu.classList.remove("active");
+                            }
+                        }
+                        document.onclick = function(e) {
+                            if (e.target !== menu && e.target !== cells[i]) {
+                                menu.classList.remove("active");
                             }
                         }
                     }
@@ -96,8 +121,6 @@ function initTable(n) {
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
-                /*menu_culture.classList.remove("active");
-                menu_square.classList.remove("active");*/
             }
         }
     }
@@ -109,7 +132,9 @@ function initTable(n) {
         table = document.querySelectorAll("#table" + n);
         cells = document.querySelectorAll("#table" + n + "_body td");
         cellOnFocus();
-        setPopupMenu();
+        if (n == 0) {
+            setPopupMenu();
+        }
     }
 
     content.onscroll = function() {
