@@ -5,8 +5,33 @@ initTable(2);
 let menu_culture = document.querySelector(".menu_culture");
 let menu_square = document.querySelector(".menu_square");
 let menu_context = document.querySelector(".menu_context");
+let focus_cell = null;
 setPopupMenu();
-let popup_cell = null;
+let copy_value = null;
+let insert_value = null;
+setContextMenu();
+
+function setContextMenu() {
+    let clear = document.querySelector("#clear");
+    let copy = document.querySelector("#copy");
+    let insert = document.querySelector("#insert");
+    let cut = document.querySelector("#cut");
+    clear.onclick = function() {
+        focus_cell.innerHTML = "";
+    }
+    copy.onclick = function() {
+        copy_value = focus_cell.innerHTML;
+    }
+    insert.onclick = function() {
+        if (copy_value != null) {
+            focus_cell.innerHTML = copy_value;
+        }
+    }
+    cut.onclick = function() {
+        copy_value = focus_cell.innerHTML;
+        focus_cell.innerHTML = "";
+    }
+}
 
 function setPopupMenu() {
     onCellClick(1);
@@ -41,12 +66,13 @@ function setPopupMenu() {
                         menu.style.top = e.clientY + "px";
                         menu.style.left = e.clientX + "px";
                         menu.classList.add("active");
-                        if(menu == menu_culture) {
+                        if (menu == menu_culture) {
                             menu_square.classList.remove("active");
                         } else {
                             menu_culture.classList.remove("active");
                         }
                         menu_context.classList.remove("active");
+                        focus_cell = null;
                         lis = menu.querySelectorAll("li");
                         for (let j = 0; j < lis.length; j++) {
                             lis[j].onclick = function(e) {
@@ -127,9 +153,11 @@ function initTable(n) {
                 menu_square.classList.remove("active");
                 menu_culture.classList.remove("active");
                 menu_context.classList.add("active");
+                focus_cell = cells[i];
                 document.onclick = function(e) {
                     if (e.target !== menu_context) {
                         menu_context.classList.remove("active");
+                        focus_cell = null;
                     }
                 }
             }
@@ -152,6 +180,7 @@ function initTable(n) {
         menu_culture.classList.remove("active");
         menu_square.classList.remove("active");
         menu_context.classList.remove("active");
+        focus_cell = null;
         invisible_table_header.style.left = (-content.scrollLeft + 5) + "px";
     };
 
