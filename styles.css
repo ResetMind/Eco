@@ -196,7 +196,7 @@ th {
 .menu_culture,
 .menu_square,
 .menu_context {
-    position: absolute;
+    position: fixed;
     width: 150px;
     max-height: 200px;
     overflow-x: hidden;
