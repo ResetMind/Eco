@@ -125,14 +125,29 @@ function initTable(n) {
     let invisible_table_header = document.querySelector("#invisible_table" + n + "_header");
     invisible_table_header.innerHTML = table_header.innerHTML;
     let headers = document.querySelectorAll("#invisible_table" + n + "_header th");
-    let cells = document.querySelectorAll("#table" + n + "_body td");
     let table = document.querySelectorAll("#table" + n);
+    let cells = document.querySelectorAll("#table" + n + "_body td");
+    loadTable();
+    table = document.querySelectorAll("#table" + n);
+    cells = document.querySelectorAll("#table" + n + "_body td");
     let add_span = document.querySelectorAll(".add")[n];
     let new_tr_html = table[2].querySelector("tbody").innerHTML;
     let content = document.querySelector(".content" + n);
     const border_width = 1;
     let isDrag = false;
     cellOnFocus();
+
+    function loadTable() {
+        const request = new XMLHttpRequest();
+        const url = "loadTable.php?table=" + n;
+        request.open("GET", url);
+        request.addEventListener("readystatechange", () => {
+            if (request.readyState === 4 && request.status === 200 && request.responseText.includes("tr")) {
+                table[2].innerHTML = request.responseText;
+            }
+        });
+        request.send();
+    }
 
     function cellOnFocus() {
         for (let i = 0; i < cells.length; i++) {
