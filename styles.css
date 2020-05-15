@@ -194,7 +194,8 @@ th {
 /*menu*/
 
 .menu_culture,
-.menu_square {
+.menu_square,
+.menu_context {
     position: absolute;
     width: 150px;
     max-height: 200px;
@@ -208,12 +209,14 @@ th {
 }
 
 .menu_culture.active,
-.menu_square.active {
+.menu_square.active,
+.menu_context.active {
     display: block;
 }
 
 .menu_culture li,
-.menu_square li {
+.menu_square li,
+.menu_context li {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -222,7 +225,8 @@ th {
 }
 
 .menu_culture li:hover,
-.menu_square li:hover {
+.menu_square li:hover,
+.menu_context li:hover {
     cursor: pointer;
     background: #3a3a3a;
     transition: all 0.3s ease;

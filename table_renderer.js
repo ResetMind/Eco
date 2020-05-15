@@ -4,17 +4,9 @@ initTable(1);
 initTable(2);
 let menu_culture = document.querySelector(".menu_culture");
 let menu_square = document.querySelector(".menu_square");
+let menu_context = document.querySelector(".menu_context");
 setPopupMenu();
 let popup_cell = null;
-
-function hidePopupMenu() {
-    let e = window.event;
-    if (e.target !== menu_culture && e.target !== menu_square) {
-        menu_culture.classList.remove("active");
-        menu_square.classList.remove("active");
-        document.removeEventListener("click", hidePopupMenu);
-    }
-}
 
 function setPopupMenu() {
     onCellClick(1);
@@ -49,6 +41,11 @@ function setPopupMenu() {
                         menu.style.top = e.clientY + "px";
                         menu.style.left = e.clientX + "px";
                         menu.classList.add("active");
+                        if(menu == menu_culture) {
+                            menu_square.classList.remove("active");
+                        } else {
+                            menu_culture.classList.remove("active");
+                        }
                         lis = menu.querySelectorAll("li");
                         for (let j = 0; j < lis.length; j++) {
                             lis[j].onclick = function(e) {
@@ -67,7 +64,7 @@ function setPopupMenu() {
                         }
                     }
                 }
-            };
+            }
         }
     }
 }
@@ -121,6 +118,12 @@ function initTable(n) {
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
+            }
+            cells[i].oncontextmenu = function(e) {
+                e.preventDefault();
+                menu_context.style.top = e.clientY + "px";
+                menu_context.style.left = e.clientX + "px";
+                menu_context.classList.add("active");
             }
         }
     }
