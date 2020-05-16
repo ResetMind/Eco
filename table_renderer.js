@@ -6,6 +6,7 @@ let menu_culture = document.querySelector(".menu_culture");
 let menu_square = document.querySelector(".menu_square");
 let menu_context = document.querySelector(".menu_context");
 let focus_cell = null;
+let focus_cell_col = null;
 setPopupMenu();
 let copy_value = null;
 let insert_value = null;
@@ -23,7 +24,7 @@ function setContextMenu() {
         copy_value = focus_cell.innerHTML;
     }
     insert.onclick = function() {
-        if (copy_value != null) {
+        if (copy_value != null && checkCellValue(focus_cell, focus_cell_col)) {
             focus_cell.innerHTML = copy_value;
         }
     }
@@ -73,6 +74,7 @@ function setPopupMenu() {
                         }
                         menu_context.classList.remove("active");
                         focus_cell = null;
+                        focus_cell_col = n;
                         lis = menu.querySelectorAll("li");
                         for (let j = 0; j < lis.length; j++) {
                             lis[j].onclick = function(e) {
@@ -120,6 +122,38 @@ function radioOnCheck() {
     }
 }
 
+function checkCellValue(cell, i) {
+    let value = cell.innerHTML;
+    if(i == 3 || i == 8) {
+        if(isNaN(parseFloat(+value))) {
+            cell.innerHTML = "";
+            return false;
+        }
+    } else if(i == 1 || i == 2) {
+        let c;
+        if (i == 1) {
+            c = document.querySelectorAll("#table2_body td:nth-child(2)");
+        } else {
+            c = document.querySelectorAll("#table1_body td:nth-child(2)");
+        }
+        for(let j = 0; j < c.length; j++) {
+            c[i] = c[i].innerHTML;
+        }
+        let arr = value.split(", ");
+        for(let j = 0; j < arr.length; j++) {
+            if(c.indexOf(arr[j]) == -1) {
+                return false;
+            }
+        }
+    } else {
+        if(isNaN(parseInt(+value))) {
+            cell.innerHTML = "";
+            return false;
+        }
+    }
+    return true;
+}
+
 function initTable(n) {
     let table_header = document.querySelector("#table" + n + "_header");
     let invisible_table_header = document.querySelector("#invisible_table" + n + "_header");
@@ -128,14 +162,11 @@ function initTable(n) {
     let table = document.querySelectorAll("#table" + n);
     let cells = document.querySelectorAll("#table" + n + "_body td");
     loadTable();
-    table = document.querySelectorAll("#table" + n);
-    cells = document.querySelectorAll("#table" + n + "_body td");
     let add_span = document.querySelectorAll(".add")[n];
     let new_tr_html = table[2].querySelector("tbody").innerHTML;
     let content = document.querySelector(".content" + n);
     const border_width = 1;
     let isDrag = false;
-    cellOnFocus();
 
     function loadTable() {
         const request = new XMLHttpRequest();
@@ -144,6 +175,17 @@ function initTable(n) {
         request.addEventListener("readystatechange", () => {
             if (request.readyState === 4 && request.status === 200 && request.responseText.includes("tr")) {
                 table[2].innerHTML = request.responseText;
+                cells = document.querySelectorAll("#table" + n + "_body td");
+                cellOnFocus();
+                if (n == 0) {
+                    setPopupMenu();
+                }
+            } else {
+                cells = document.querySelectorAll("#table" + n + "_body td");
+                cellOnFocus();
+                if (n == 0) {
+                    setPopupMenu();
+                }
             }
         });
         request.send();
@@ -157,9 +199,11 @@ function initTable(n) {
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "#2a2a2a";
             }
             cells[i].onblur = function(e) {
+                console.log("blur");
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
+                checkCellValue(cells[i], col);
             }
             cells[i].oncontextmenu = function(e) {
                 e.preventDefault();
@@ -169,10 +213,13 @@ function initTable(n) {
                 menu_culture.classList.remove("active");
                 menu_context.classList.add("active");
                 focus_cell = cells[i];
+                let col = i % headers.length;
+                focus_cell_col = col;
                 document.onclick = function(e) {
                     if (e.target !== menu_context) {
                         menu_context.classList.remove("active");
                         focus_cell = null;
+                        focus_cell_col = null;
                     }
                 }
             }
@@ -196,6 +243,7 @@ function initTable(n) {
         menu_square.classList.remove("active");
         menu_context.classList.remove("active");
         focus_cell = null;
+        focus_cell_col = null;
         invisible_table_header.style.left = (-content.scrollLeft + 5) + "px";
     };
 

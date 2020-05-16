@@ -163,6 +163,16 @@ td {
     outline: none;
 }
 
+td.parse_error:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    border: 2px solid red;
+}
+
 td:focus:after {
     content: '';
     position: absolute;
