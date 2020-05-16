@@ -11,6 +11,7 @@ setPopupMenu();
 let copy_value = null;
 let insert_value = null;
 setContextMenu();
+let save_a = document.querySelector("#save");
 
 function setContextMenu() {
     let clear = document.querySelector("#clear");
@@ -147,7 +148,7 @@ function checkCellValue(value, i) {
             }
         }
     } else {
-        if(isNaN(parseInt(+value))) {
+        if(isNaN(parseInt(+value)) || value.split(".").length > 1) {
             return false;
         }
     }
