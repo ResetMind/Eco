@@ -24,8 +24,10 @@ function setContextMenu() {
         copy_value = focus_cell.innerHTML;
     }
     insert.onclick = function() {
-        if (copy_value != null && checkCellValue(focus_cell, focus_cell_col)) {
-            focus_cell.innerHTML = copy_value;
+        if (copy_value != null) {
+            if (checkCellValue(copy_value, focus_cell_col)) {
+                focus_cell.innerHTML = copy_value;
+            }
         }
     }
     cut.onclick = function() {
@@ -122,11 +124,9 @@ function radioOnCheck() {
     }
 }
 
-function checkCellValue(cell, i) {
-    let value = cell.innerHTML;
+function checkCellValue(value, i) {
     if(i == 3 || i == 8) {
         if(isNaN(parseFloat(+value))) {
-            cell.innerHTML = "";
             return false;
         }
     } else if(i == 1 || i == 2) {
@@ -136,18 +136,18 @@ function checkCellValue(cell, i) {
         } else {
             c = document.querySelectorAll("#table1_body td:nth-child(2)");
         }
+        let c2 = Array();
         for(let j = 0; j < c.length; j++) {
-            c[i] = c[i].innerHTML;
+            c2.push(c[j].innerHTML);
         }
         let arr = value.split(", ");
         for(let j = 0; j < arr.length; j++) {
-            if(c.indexOf(arr[j]) == -1) {
+            if(c2.indexOf(arr[j]) == -1) {
                 return false;
             }
         }
     } else {
         if(isNaN(parseInt(+value))) {
-            cell.innerHTML = "";
             return false;
         }
     }
@@ -199,11 +199,12 @@ function initTable(n) {
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "#2a2a2a";
             }
             cells[i].onblur = function(e) {
-                console.log("blur");
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
-                checkCellValue(cells[i], col);
+                if (!checkCellValue(cells[i].innerHTML, col)) {
+                    cells[i].innerHTML = "";
+                }
             }
             cells[i].oncontextmenu = function(e) {
                 e.preventDefault();
