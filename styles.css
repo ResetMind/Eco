@@ -147,7 +147,6 @@ header ul li ul li {
 table {
     border-collapse: collapse;
     border: 1px solid #3a3a3a;
-    transition-duration: 0.3s;
 }
 
 th,
@@ -157,7 +156,6 @@ td {
     overflow: hidden;
     white-space: nowrap;
     position: relative;
-    transition-duration: 0.3s;
 }
 
 td {

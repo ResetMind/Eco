@@ -40,7 +40,7 @@ save_a.onclick = function() {
     request.open("POST", url);
     request.addEventListener("readystatechange", () => {
         if (request.readyState === 4 && request.status === 200) {
-            if(request.responseText.includes("ok")) {
+            if (request.responseText.includes("ok")) {
                 let date = new Date();
                 let h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
                 let m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
@@ -246,6 +246,7 @@ function initTable(n) {
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "#2a2a2a";
             }
             cells[i].onblur = function(e) {
+                console.log("blur");
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
@@ -323,6 +324,9 @@ function initTable(n) {
                             table[2].style.width = new_tbl_width + "px";
                             headers[column].style.width = new_col_width + "px";
                             cells[column].style.width = new_col_width + "px";
+                            if (column == headers.length - 1) {
+                                content.scrollLeft = content.scrollWidth;
+                            }
                         }
                     }
                     document.onmouseup = function() {
