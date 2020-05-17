@@ -7,11 +7,45 @@ let menu_square = document.querySelector(".menu_square");
 let menu_context = document.querySelector(".menu_context");
 let focus_cell = null;
 let focus_cell_col = null;
+let page_num = 0;
 setPopupMenu();
 let copy_value = null;
 let insert_value = null;
 setContextMenu();
 let save_a = document.querySelector("#save");
+
+save_a.onclick = function() {
+    let params = "";
+    let table_header, cells;
+    for (let n = 0; n < 3; n++) {
+        if (n == 0) {
+            table_header = document.querySelectorAll("#invisible_table0_header th");
+            cells = document.querySelectorAll("#table0_body td");
+        } else {
+            table_header = document.querySelectorAll("#invisible_table" + n + "_header th:not(:nth-child(1))");
+            cells = document.querySelectorAll("#table" + n + "_body td:not(:nth-child(1))");
+        }
+        let col = 0;
+        for (let i = 0; i < cells.length; i++) {
+            if (col >= table_header.length) {
+                col = 0;
+            }
+            params += "&" + table_header[col].innerHTML.replace(" ", "_") + "[]=" + cells[i].innerHTML;
+            col++;
+        }
+    }
+    console.log(params.slice(1));
+    const request = new XMLHttpRequest();
+    const url = "saveTable.php";
+    request.open("POST", url);
+    request.addEventListener("readystatechange", () => {
+        if (request.readyState === 4 && request.status === 200) {
+            console.log(request.responseText);
+        }
+    });
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.send(params.slice(1));
+}
 
 function setContextMenu() {
     let clear = document.querySelector("#clear");
@@ -26,8 +60,10 @@ function setContextMenu() {
     }
     insert.onclick = function() {
         if (copy_value != null) {
-            if (checkCellValue(copy_value, focus_cell_col)) {
-                focus_cell.innerHTML = copy_value;
+            if (page_num == 0) {
+                if (checkCellValue(copy_value, focus_cell_col)) {
+                    focus_cell.innerHTML = copy_value;
+                }
             }
         }
     }
@@ -112,25 +148,28 @@ function radioOnCheck() {
                 content0.style.display = "block";
                 content1.style.display = "none";
                 content2.style.display = "none";
+                page_num = i;
             } else if (i == 1) {
                 content1.style.display = "block";
                 content0.style.display = "none";
                 content2.style.display = "none";
+                page_num = i;
             } else if (i == 2) {
                 content2.style.display = "block";
                 content0.style.display = "none";
                 content1.style.display = "none";
+                page_num = i;
             }
         });
     }
 }
 
 function checkCellValue(value, i) {
-    if(i == 3 || i == 8) {
-        if(isNaN(parseFloat(+value))) {
+    if (i == 3 || i == 8) {
+        if (isNaN(parseFloat(+value))) {
             return false;
         }
-    } else if(i == 1 || i == 2) {
+    } else if (i == 1 || i == 2) {
         let c;
         if (i == 1) {
             c = document.querySelectorAll("#table2_body td:nth-child(2)");
@@ -138,17 +177,17 @@ function checkCellValue(value, i) {
             c = document.querySelectorAll("#table1_body td:nth-child(2)");
         }
         let c2 = Array();
-        for(let j = 0; j < c.length; j++) {
+        for (let j = 0; j < c.length; j++) {
             c2.push(c[j].innerHTML);
         }
         let arr = value.split(", ");
-        for(let j = 0; j < arr.length; j++) {
-            if(c2.indexOf(arr[j]) == -1) {
+        for (let j = 0; j < arr.length; j++) {
+            if (c2.indexOf(arr[j]) == -1) {
                 return false;
             }
         }
     } else {
-        if(isNaN(parseInt(+value)) || value.split(".").length > 1) {
+        if (isNaN(parseInt(+value)) || value.split(".").length > 1) {
             return false;
         }
     }
@@ -203,8 +242,10 @@ function initTable(n) {
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
-                if (!checkCellValue(cells[i].innerHTML, col)) {
-                    cells[i].innerHTML = "";
+                if (n == 0) {
+                    if (!checkCellValue(cells[i].innerHTML, col)) {
+                        cells[i].innerHTML = "";
+                    }
                 }
             }
             cells[i].oncontextmenu = function(e) {
