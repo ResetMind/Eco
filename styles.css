@@ -50,7 +50,7 @@ header li:hover {
 }
 
 header ul li ul {
-    visibility: hidden;
+    /*visibility: hidden;*/ 
     opacity: 0;
     position: absolute;
     transition: all 0.3s ease;
@@ -61,7 +61,7 @@ header ul li ul {
 
 header ul li:hover>ul,
 header ul li ul:hover {
-    visibility: visible;
+    /*visibility: visible;*/
     opacity: 1;
     display: block;
 }
@@ -147,6 +147,7 @@ header ul li ul li {
 table {
     border-collapse: collapse;
     border: 1px solid #3a3a3a;
+    transition-duration: 0.3s;
 }
 
 th,
@@ -156,6 +157,7 @@ td {
     overflow: hidden;
     white-space: nowrap;
     position: relative;
+    transition-duration: 0.3s;
 }
 
 td {
@@ -250,6 +252,12 @@ footer {
     bottom: 0;
     width: 100%;
     background-color: #2a2a2a;
+}
+
+footer span {
+    float: right;
+    padding: 16px;
+    color: #939393;
 }
 
 .tabs {

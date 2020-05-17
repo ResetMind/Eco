@@ -17,6 +17,7 @@ let save_a = document.querySelector("#save");
 save_a.onclick = function() {
     let params = "";
     let table_header, cells;
+    let info = document.querySelector("#info");
     for (let n = 0; n < 3; n++) {
         if (n == 0) {
             table_header = document.querySelectorAll("#invisible_table0_header th");
@@ -34,13 +35,19 @@ save_a.onclick = function() {
             col++;
         }
     }
-    console.log(params.slice(1));
     const request = new XMLHttpRequest();
     const url = "saveTable.php";
     request.open("POST", url);
     request.addEventListener("readystatechange", () => {
         if (request.readyState === 4 && request.status === 200) {
-            console.log(request.responseText);
+            if(request.responseText.includes("ok")) {
+                let date = new Date();
+                let h = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                let m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                info.innerHTML = "Сохранено " + h + ":" + m;
+            } else {
+                info.innerHTML = "Ошибка сохранения";
+            }
         }
     });
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
