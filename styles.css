@@ -155,14 +155,14 @@ input[type="button"]:hover {
 #table0_body,
 #table1_body,
 #table2_body,
-#table2_body {
+#table3_body {
     margin-top: -1px;
 }
 
 #invisible_table0_header,
 #invisible_table1_header,
 #invisible_table2_header,
-#invisible_table2_header {
+#invisible_table3_header {
     z-index: 999;
     position: fixed;
     /*left: -5px;*/
@@ -171,7 +171,7 @@ input[type="button"]:hover {
 #table0_header,
 #table1_header,
 #table2_header,
-#table2_header {
+#table3_header {
     visibility: hidden;
 }
 
