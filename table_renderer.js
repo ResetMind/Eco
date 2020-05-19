@@ -59,6 +59,7 @@ function setContextMenu() {
     let copy = document.querySelector("#copy");
     let insert = document.querySelector("#insert");
     let cut = document.querySelector("#cut");
+    let del = document.querySelector("#del");
     clear.onclick = function() {
         focus_cell.innerHTML = "";
     }
@@ -77,6 +78,10 @@ function setContextMenu() {
     cut.onclick = function() {
         copy_value = focus_cell.innerHTML;
         focus_cell.innerHTML = "";
+    }
+    del.onclick = function() {
+        let row_to_delete = focus_cell.parentElement;
+        row_to_delete.parentElement.removeChild(row_to_delete);
     }
 }
 
