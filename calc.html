@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eco</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <span id="first_span">Расчет</span>
+        <span>Экопрогноз</span>
+    </header>
+    <div class="content3">
+        <form name="search">
+            <input type="number" name="year1" placeholder="Начальный год" onmouseup="find()" onkeyup="find()">
+            <input type="number" name="year2" placeholder="Конечный год" onmouseup="find()" onkeyup="find()">
+            <input type="text" name="culture" placeholder="Культура" onkeyup="find()">
+            <input type="text" name="field" placeholder="Поле" onkeyup="find()">
+            <input type="button" name="calculate" value="Расчет">
+        </form>
+        <div id="invisible_table3_header"></div>
+        <div id="table3_header">
+            <div id="stub"></div>
+            <table id="table3">
+                <thead>
+                    <tr>
+                        <th>Год</th>
+                        <th>∑О,мм</th>
+                        <th>∑t,°C</th>
+                        <th>X1</th>
+
+                        <th>∑О,мм</th>
+                        <th>∑t≥10°C</th>
+                        <th>X2</th>
+
+                        <th>∑О,мм</th>
+                        <th>∑t≥15°C</th>
+                        <th>X3</th>
+
+                        <th>∑О,мм</th>
+                        <th>∑t≥20°C</th>
+                        <th>X4</th>
+
+                        <th>∑О≥2мм</th>
+                        <th>∑t,°C</th>
+                        <th>X5</th>
+
+                        <th>∑О≥2мм</th>
+                        <th>∑t≥10°C</th>
+                        <th>X6</th>
+
+                        <th>∑О≥2мм</th>
+                        <th>∑t≥15°C</th>
+                        <th>X7</th>
+
+                        <th>∑О≥2мм</th>
+                        <th>∑t≥20°C</th>
+                        <th>X8</th>
+
+                        <th>∑В,%</th>
+                        <th>∑t,°C</th>
+                        <th>X9</th>
+
+                        <th>∑В,%</th>
+                        <th>∑t≥10°C</th>
+                        <th>X10</th>
+
+                        <th>∑В,%</th>
+                        <th>∑t≥15°C</th>
+                        <th>X11</th>
+
+                        <th>∑В,%</th>
+                        <th>∑t≥20°C</th>
+                        <th>X12</th>
+                        
+                        <th>∑В≥40%</th>
+                        <th>∑t,°C</th>
+                        <th>X13</th>
+
+                        <th>∑В≥45%</th>
+                        <th>∑t,°C</th>
+                        <th>X14</th>
+                        
+                        <th>∑В≥50%</th>
+                        <th>∑t,°C</th>
+                        <th>X15</th>
+                        
+                        <th>∑В≥40%</th>
+                        <th>∑t≥10°C</th>
+                        <th>X16</th>
+                        
+                        <th>∑В≥40%</th>
+                        <th>∑t≥15°C</th>
+                        <th>X17</th>
+                        
+                        <th>∑В≥40%</th>
+                        <th>∑t≥20°C</th>
+                        <th>X18</th>
+                        
+                        <th>∑В≥45%</th>
+                        <th>∑t≥10°C</th>
+                        <th>X19</th>
+                        
+                        <th>∑В≥45%</th>
+                        <th>∑t≥20°C</th>
+                        <th>X21</th>
+                        
+                        <th>∑В≥50%</th>
+                        <th>∑t≥10°C</th>
+                        <th>X22</th>
+                        
+                        <th>∑В≥50%</th>
+                        <th>∑t≥15°C</th>
+                        <th>X23</th>
+                        
+                        <th>∑В≥50%</th>
+                        <th>∑t≥20°C</th>
+                        <th>X24</th>
+                        
+                        <th>ЧД(О)</th>
+                        <th>ЧД(t≥10°C)</th>
+                        <th>X25</th>
+                        
+                        <th>ЧД(О)</th>
+                        <th>ЧД(t≥15°C)</th>
+                        <th>X26</th>
+                        
+                        <th>ЧД(О)</th>
+                        <th>ЧД(t≥20°C)</th>
+                        <th>X27</th>
+                        
+                        <th>ЧД(О≥2мм)</th>
+                        <th>ЧД(t≥10°C)</th>
+                        <th>X28</th>
+                        
+                        <th>ЧД(О≥2мм)</th>
+                        <th>ЧД(t≥15°C)</th>
+                        <th>X29</th>
+                        
+                        <th>ЧД(О≥2мм)</th>
+                        <th>ЧД(t≥20°C)</th>
+                        <th>X30</th>
+                        
+                        <th>ЧД(В≥40%)</th>
+                        <th>ЧД(t≥10°C)</th>
+                        <th>X31</th>
+                        
+                        <th>ЧД(В≥40%)</th>
+                        <th>ЧД(t≥15°C)</th>
+                        <th>X32</th>
+                        
+                        <th>ЧД(В≥40%)</th>
+                        <th>ЧД(t≥20°C)</th>
+                        <th>X33</th>
+                        
+                        <th>ЧД(В≥45%)</th>
+                        <th>ЧД(t≥10°C)</th>
+                        <th>X34</th>
+                        
+                        <th>ЧД(В≥45%)</th>
+                        <th>ЧД(t≥20°C)</th>
+                        <th>X36</th>
+                        
+                        <th>ЧД(В≥50%)</th>
+                        <th>ЧД(t≥10°C)</th>
+                        <th>X37</th>
+                        
+                        <th>ЧД(В≥50%)</th>
+                        <th>ЧД(t≥15°C)</th>
+                        <th>X38</th>
+                        
+                        <th>ЧД(В≥50%)</th>
+                        <th>ЧД(t≥20°C)</th>
+                        <th>X39</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="table3_body">
+            <table id="table3">
+                
+            </table>
+        </div>
+    </div>
+    <script src="calculate.js"></script>
+</body>
+
+</html>
