@@ -28,6 +28,18 @@ header span {
     float: left;
 }
 
+#first_span a {
+    text-decoration: none;
+    color: #6d6d6d;
+    transition-duration: 0.3s;
+}
+
+#first_span a:hover{
+    text-decoration: none;
+    color: #f4f8f9;
+    transition-duration: 0.3s;
+}
+
 header ul {
     list-style: none;
     margin: 0;

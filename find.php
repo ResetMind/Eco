@@ -23,7 +23,7 @@ function find($link) {
 		$arr[] = "culture like '%" . $_GET['culture'] . "%'";
 	}
 	if ($_GET['field'] != "") {
-		$arr[] = "field like '%" . $_GET['field'] . "%'";
+		$arr[] = "square like '%" . $_GET['field'] . "%'";
 	}
 	$l = count($arr);
 	if ($l == 0) {

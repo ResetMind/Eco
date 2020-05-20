@@ -72,6 +72,8 @@ function setContextMenu() {
                 if (checkCellValue(copy_value, focus_cell_col)) {
                     focus_cell.innerHTML = copy_value;
                 }
+            } else {
+                focus_cell.innerHTML = copy_value;
             }
         }
     }
@@ -81,6 +83,12 @@ function setContextMenu() {
     }
     del.onclick = function() {
         let row_to_delete = focus_cell.parentElement;
+        /*for (let i = 0; i < row_to_delete.children.length; i++) {
+            row_to_delete.children[i].onclick = null;
+            row_to_delete.children[i].onblur = null;
+            row_to_delete.children[i].onfocus = null;
+            row_to_delete.children[i].oncontextmenu = null;
+        }*/
         row_to_delete.parentElement.removeChild(row_to_delete);
     }
 }
@@ -248,13 +256,17 @@ function initTable(n) {
             cells[i].onfocus = function(e) {
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
-                table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "#2a2a2a";
+                if (table[2].querySelector("tr:nth-child(" + (row + 1) + ")") != null) {
+                    table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "#2a2a2a";
+                }
             }
             cells[i].onblur = function(e) {
                 console.log("blur");
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
-                table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
+                if (table[2].querySelector("tr:nth-child(" + (row + 1) + ")") != null) {
+                    table[2].querySelector("tr:nth-child(" + (row + 1) + ")").style.background = "transparent";
+                }
                 if (n == 0) {
                     if (!checkCellValue(cells[i].innerHTML, col)) {
                         cells[i].innerHTML = "";
