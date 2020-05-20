@@ -261,7 +261,6 @@ function initTable(n) {
                 }
             }
             cells[i].onblur = function(e) {
-                console.log("blur");
                 let row = parseInt(i / headers.length);
                 let col = i % headers.length;
                 if (table[2].querySelector("tr:nth-child(" + (row + 1) + ")") != null) {
