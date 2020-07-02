@@ -34,7 +34,7 @@ header span {
     transition-duration: 0.3s;
 }
 
-#first_span a:hover{
+#first_span a:hover {
     text-decoration: none;
     color: #f4f8f9;
     transition-duration: 0.3s;
@@ -66,7 +66,6 @@ header li:hover {
 }
 
 header ul li ul {
-    /*visibility: hidden;*/ 
     opacity: 0;
     position: absolute;
     transition: all 0.3s ease;
@@ -77,7 +76,6 @@ header ul li ul {
 
 header ul li:hover>ul,
 header ul li ul:hover {
-    /*visibility: visible;*/
     opacity: 1;
     display: block;
 }
@@ -94,7 +92,6 @@ header ul li ul li {
 .content1,
 .content2,
 .content3 {
-    /*margin: 54px 5px 59px 5px;*/
     position: absolute;
     top: 54px;
     bottom: 59px;
@@ -113,6 +110,10 @@ header ul li ul li {
 .content3 {
     top: 90px;
     bottom: 5px;
+}
+
+.chart {
+    width: 100%;
 }
 
 .content1,
@@ -144,7 +145,6 @@ input[type="button"]:hover {
 #table2,
 #table3 {
     border-style: solid;
-    /*border-width: 1px 1px 0px;*/
     border-color: #3a3a3a;
     border-spacing: 0;
     font-size: 14px;
@@ -184,7 +184,6 @@ input[type="button"]:hover {
 #invisible_table3_header {
     z-index: 999;
     position: fixed;
-    /*left: -5px;*/
 }
 
 #table0_header,

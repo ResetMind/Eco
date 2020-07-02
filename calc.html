@@ -5,6 +5,7 @@
     <title>Eco</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles.css">
+    <script src="plotly-latest.min.js"></script>
 </head>
 
 <body>
@@ -191,8 +192,13 @@
         </div>
         <div id="table3_body">
             <table id="table3">
-                
             </table>
+        </div>
+        <div>
+            <input type="button" name="createChart" value="Создать график" 
+            onclick="createChart()">
+        </div>
+        <div id="chart">
         </div>
     </div>
     <script src="calculate.js"></script>

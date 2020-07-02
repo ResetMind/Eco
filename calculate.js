@@ -122,6 +122,23 @@ function calc() {
     }
 }
 
+function createChart() {
+    let new_win = window.open("chart.html");
+    new_win.onload = function() {
+        let chart_holder = new_win.document.querySelector("#chart");
+        var trace1 = {
+            x: [1, 2, 3, 4, 5],
+            y: [10, 15, 13, 17, 6],
+            type: 'scatter'
+        };
+        var data = [trace1];
+        var layout = {
+            title: "123",
+        };
+        Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
+    }
+}
+
 content.onscroll = function() {
     invisible_table_header.style.left = (-content.scrollLeft + 5) + "px";
 };
