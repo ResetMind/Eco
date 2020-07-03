@@ -5,8 +5,14 @@ let table = document.querySelectorAll("#table3");
 let content = document.querySelector(".content3");
 let headers = document.querySelectorAll("#invisible_table3_header th");
 let cells = document.querySelectorAll("#table3_body td");
+let xaxes_select = document.querySelector("#xaxes");
+let yaxes_select = document.querySelector("#yaxes");
+let xaxes_options = document.querySelectorAll("#xaxes option");
+let yaxes_options = document.querySelectorAll("#yaxes option");
+let chart_error = document.querySelector("#chart_error");
 
 function find() {
+    chart_error.innerHTML = "";
     let year1 = search.year1.value;
     let year2 = search.year2.value;
     let culture = search.culture.value;
@@ -29,11 +35,13 @@ function find() {
 }
 
 function calc() {
-    let cells = document.querySelectorAll("#table3_body td");
-    let headers = document.querySelectorAll("#invisible_table3_header th");
+    cells = document.querySelectorAll("#table3_body td");
     for (let i = 0; i < cells.length; i++) {
         let col = i % headers.length;
         if (col % 3 == 0 && col != 0) {
+            if (cells[i - 2].innerHTML == "" || cells[i - 1].innerHTML == "") {
+                continue;
+            }
             let a = parseFloat(+(cells[i - 2].innerHTML));
             let b = parseFloat(+(cells[i - 1].innerHTML));
             if (isNaN(a) || isNaN(b)) {
@@ -123,21 +131,77 @@ function calc() {
 }
 
 function createChart() {
-    let new_win = window.open("chart.html");
-    new_win.onload = function() {
-        let chart_holder = new_win.document.querySelector("#chart");
-        var trace1 = {
-            x: [1, 2, 3, 4, 5],
-            y: [10, 15, 13, 17, 6],
-            type: 'scatter'
-        };
-        var data = [trace1];
-        var layout = {
-            title: "123",
-        };
-        Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
+    let n1 = xaxes_select.selectedIndex;
+    let col1 = xaxes_options[n1].value;
+    let n2 = yaxes_select.selectedIndex;
+    let col2 = yaxes_options[n2].value;
+    let x_arr = new Array();
+    let y_arr = new Array();
+    for (let i = 0; i < cells.length; i++) {
+        let col = i % headers.length;
+        if (col == col1) {
+            x_arr.push(cells[i].innerHTML);
+        } else if (col == col2) {
+            y_arr.push(cells[i].innerHTML);
+        } else {
+            continue;
+        }
+        if (x_arr.length == y_arr.length && x_arr.length > 0) {
+            let a = parseFloat(+(x_arr[x_arr.length - 1]));
+            let b = parseFloat(+(y_arr[y_arr.length - 1]));
+            if (x_arr[x_arr.length - 1] == "" || y_arr[y_arr.length - 1] == "" ||
+                isNaN(a) || isNaN(b)) {
+                x_arr.pop();
+                y_arr.pop()
+            }
+        }
     }
+    if (x_arr.length > 1 && y_arr.length > 1) {
+        let new_win = window.open("chart.html");
+        new_win.onload = function() {
+            let chart_holder = new_win.document.querySelector("#chart");
+            var trace1 = {
+                x: x_arr,
+                y: y_arr,
+                type: 'scatter'
+            };
+            var data = [trace1];
+            var layout = {
+                title: "123",
+            };
+            Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
+        }
+    } else {
+        chart_error.innerHTML = "Недостаточно данных для построения";
+    }
+
 }
+
+xaxes_select.addEventListener("change", function() {
+    chart_error.innerHTML = "";
+    let n1 = xaxes_select.selectedIndex;
+    let n2 = yaxes_select.selectedIndex;
+    if (n1 == n2) {
+        if (n1 == 0) {
+            yaxes_select.selectedIndex = 1;
+        } else {
+            yaxes_select.selectedIndex = n1 - 1;
+        }
+    }
+})
+
+yaxes_select.addEventListener("change", function() {
+    chart_error.innerHTML = "";
+    let n1 = yaxes_select.selectedIndex;
+    let n2 = xaxes_select.selectedIndex;
+    if (n1 == n2) {
+        if (n1 == 0) {
+            xaxes_select.selectedIndex = 1;
+        } else {
+            xaxes_select.selectedIndex = n1 - 1;
+        }
+    }
+})
 
 content.onscroll = function() {
     invisible_table_header.style.left = (-content.scrollLeft + 5) + "px";
@@ -145,7 +209,6 @@ content.onscroll = function() {
 
 function cellOnFocus() {
     cells = document.querySelectorAll("#table3_body td");
-    headers = document.querySelectorAll("#invisible_table3_header th");
     for (let i = 0; i < cells.length; i++) {
         cells[i].onfocus = function(e) {
             let row = parseInt(i / headers.length);

@@ -140,6 +140,14 @@ input[type="button"]:hover {
     transition: all 0.3s ease;
 }
 
+.graphparams label {
+    font-size: 14px;
+}
+
+#chart_error {
+    font-size: 14px;
+}
+
 #table0,
 #table1,
 #table2,
