@@ -132,16 +132,18 @@ function calc() {
 
 function createChart() {
     let n1 = xaxes_select.selectedIndex;
-    let col1 = xaxes_options[n1].value;
+    let sel1_val = xaxes_options[n1].value;
+    let sel1_text = xaxes_options[n1].text;
     let n2 = yaxes_select.selectedIndex;
-    let col2 = yaxes_options[n2].value;
+    let sel2_val = yaxes_options[n2].value;
+    let sel2_text = yaxes_options[n2].text;
     let x_arr = new Array();
     let y_arr = new Array();
     for (let i = 0; i < cells.length; i++) {
         let col = i % headers.length;
-        if (col == col1) {
+        if (col == sel1_val) {
             x_arr.push(cells[i].innerHTML);
-        } else if (col == col2) {
+        } else if (col == sel2_val) {
             y_arr.push(cells[i].innerHTML);
         } else {
             continue;
@@ -156,25 +158,38 @@ function createChart() {
             }
         }
     }
+    x_arr.sort(compare);
+    let x_arr2 = x_arr.slice();
+    for(let i = 0; i < x_arr2.length; i++) {
+        
+    }
     if (x_arr.length > 1 && y_arr.length > 1) {
         let new_win = window.open("chart.html");
         new_win.onload = function() {
             let chart_holder = new_win.document.querySelector("#chart");
-            var trace1 = {
+            let trace1 = {
                 x: x_arr,
                 y: y_arr,
-                type: 'scatter'
+                type: "scatter",
+                mode: "lines+markers",
+                name: sel1_text + " и " + sel2_text
             };
-            var data = [trace1];
-            var layout = {
-                title: "123",
+            let data = [trace1];
+            let layout = {
+                title: sel1_text + " и " + sel2_text,
+                showlegend: true
             };
             Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
         }
     } else {
         chart_error.innerHTML = "Недостаточно данных для построения";
     }
+}
 
+function compare(a, b) {
+    if (a > b) return 1;
+    if (a == b) return 0;
+    if (a < b) return -1;
 }
 
 xaxes_select.addEventListener("change", function() {
