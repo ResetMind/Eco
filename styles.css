@@ -145,13 +145,61 @@ input[type="button"]:hover {
     transition: all 0.3s ease;
 }
 
+
+/*chart*/
+
 .graphparams label {
     font-size: 14px;
+}
+
+.content_chart {
+    padding: 5px;
+}
+
+.used_charts {
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+.used_chart {
+    background: #1f1f1f;
+    border: 1px solid #3a3a3a;
+    float: left;
+    text-align: center;
+    padding: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.delete_chart {
+    color: #6d6d6d;
+    transition-duration: 0.3s;
+}
+
+.delete_chart:hover {
+    color: #f4f8f9;
+    cursor: pointer;
+    transition-duration: 0.3s;
 }
 
 #chart_error {
     font-size: 14px;
 }
+
+.refresh {
+    font-weight: bold;
+    color: #6d6d6d;
+    transition-duration: 0.3s;
+}
+
+.refresh:hover {
+    color: #f4f8f9;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+
+/*chart*/
 
 #table0,
 #table1,

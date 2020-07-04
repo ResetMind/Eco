@@ -21,6 +21,7 @@
             <input type="text" name="culture" placeholder="Культура" onkeyup="find()">
             <input type="text" name="field" placeholder="Поле" onkeyup="find()">
             <input type="button" name="calculate" value="Расчет" onclick="calc()">
+            <input type="button" name="new_chart" value="Новый график" onclick="openChartWindow()">
         </form>
     </div>
     <div class="content3">
@@ -193,136 +194,6 @@
         <div id="table3_body">
             <table id="table3">
             </table>
-        </div>
-        <div id="stub"></div>
-        <div class="graphparams">
-            <label for="xaxes">Ось Х:</label>
-            <select id="xaxes" name="xaxes">
-                <option value="0" selected>Год</option>
-                <option value="1">∑О,мм</option>
-                <option value="2">∑t,°C</option>
-                <option value="5">∑t≥10°C</option>
-                <option value="8">∑t≥15°C</option>
-                <option value="11">∑t≥20°C</option>
-                <option value="13">∑О≥2мм</option>
-                <option value="25">∑В,%</option>
-                <option value="37">∑В≥40%</option>
-                <option value="40">∑В≥45%</option>
-                <option value="43">∑В≥50%</option>
-                <option value="73">ЧД(О)</option>
-                <option value="74">ЧД(t≥10°C)</option>
-                <option value="77">ЧД(t≥15°C)</option>
-                <option value="80">ЧД(t≥20°C)</option>
-                <option value="82">ЧД(О≥2мм)</option>
-                <option value="91">ЧД(В≥40%)</option>
-                <option value="100">ЧД(В≥45%)</option>
-                <option value="109">ЧД(В≥50%)</option>
-                <option value="3">X1</option>
-                <option value="6">X2</option>
-                <option value="9">X3</option>
-                <option value="12">X4</option>
-                <option value="15">X5</option>
-                <option value="18">X6</option>
-                <option value="21">X7</option>
-                <option value="24">X8</option>
-                <option value="27">X9</option>
-                <option value="30">X10</option>
-                <option value="33">X11</option>
-                <option value="36">X12</option>
-                <option value="39">X13</option>
-                <option value="42">X14</option>
-                <option value="45">X15</option>
-                <option value="48">X16</option>
-                <option value="51">X17</option>
-                <option value="54">X18</option>
-                <option value="57">X19</option>
-                <option value="60">X20</option>
-                <option value="63">X21</option>
-                <option value="66">X22</option>
-                <option value="69">X23</option>
-                <option value="72">X24</option>
-                <option value="75">X25</option>
-                <option value="78">X26</option>
-                <option value="81">X27</option>
-                <option value="84">X28</option>
-                <option value="87">X29</option>
-                <option value="90">X30</option>
-                <option value="93">X31</option>
-                <option value="96">X32</option>
-                <option value="99">X33</option>
-                <option value="102">X34</option>
-                <option value="105">X35</option>
-                <option value="108">X36</option>
-                <option value="111">X37</option>
-                <option value="114">X38</option>
-                <option value="117">X39</option>
-            </select>
-            <label for="yaxes">Ось Y:</label>
-            <select id="yaxes" name="yaxes">
-                <option value="0">Год</option>
-                <option value="1" selected>∑О,мм</option>
-                <option value="2">∑t,°C</option>
-                <option value="5">∑t≥10°C</option>
-                <option value="8">∑t≥15°C</option>
-                <option value="11">∑t≥20°C</option>
-                <option value="13">∑О≥2мм</option>
-                <option value="25">∑В,%</option>
-                <option value="37">∑В≥40%</option>
-                <option value="40">∑В≥45%</option>
-                <option value="43">∑В≥50%</option>
-                <option value="73">ЧД(О)</option>
-                <option value="74">ЧД(t≥10°C)</option>
-                <option value="77">ЧД(t≥15°C)</option>
-                <option value="80">ЧД(t≥20°C)</option>
-                <option value="82">ЧД(О≥2мм)</option>
-                <option value="91">ЧД(В≥40%)</option>
-                <option value="100">ЧД(В≥45%)</option>
-                <option value="109">ЧД(В≥50%)</option>
-                <option value="3">X1</option>
-                <option value="6">X2</option>
-                <option value="9">X3</option>
-                <option value="12">X4</option>
-                <option value="15">X5</option>
-                <option value="18">X6</option>
-                <option value="21">X7</option>
-                <option value="24">X8</option>
-                <option value="27">X9</option>
-                <option value="30">X10</option>
-                <option value="33">X11</option>
-                <option value="36">X12</option>
-                <option value="39">X13</option>
-                <option value="42">X14</option>
-                <option value="45">X15</option>
-                <option value="48">X16</option>
-                <option value="51">X17</option>
-                <option value="54">X18</option>
-                <option value="57">X19</option>
-                <option value="60">X20</option>
-                <option value="63">X21</option>
-                <option value="66">X22</option>
-                <option value="69">X23</option>
-                <option value="72">X24</option>
-                <option value="75">X25</option>
-                <option value="78">X26</option>
-                <option value="81">X27</option>
-                <option value="84">X28</option>
-                <option value="87">X29</option>
-                <option value="90">X30</option>
-                <option value="93">X31</option>
-                <option value="96">X32</option>
-                <option value="99">X33</option>
-                <option value="102">X34</option>
-                <option value="105">X35</option>
-                <option value="108">X36</option>
-                <option value="111">X37</option>
-                <option value="114">X38</option>
-                <option value="117">X39</option>
-            </select>
-            <input type="button" name="createChart" value="Создать график" 
-            onclick="createChart()">
-            <input type="button" name="addToChart" value="Добавить к графику" 
-            onclick="addToChart()">
-            <br><span id="chart_error"></span>
         </div>
     </div>
     <script src="calculate.js"></script>

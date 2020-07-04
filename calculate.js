@@ -5,15 +5,9 @@ let table = document.querySelectorAll("#table3");
 let content = document.querySelector(".content3");
 let headers = document.querySelectorAll("#invisible_table3_header th");
 let cells = document.querySelectorAll("#table3_body td");
-let xaxes_select = document.querySelector("#xaxes");
-let yaxes_select = document.querySelector("#yaxes");
-let xaxes_options = document.querySelectorAll("#xaxes option");
-let yaxes_options = document.querySelectorAll("#yaxes option");
-let chart_error = document.querySelector("#chart_error");
-let x_arr_sorted, y_arr_sorted, new_win, data;
 
 function find() {
-    chart_error.innerHTML = "";
+    //chart_error.innerHTML = "";
     let year1 = search.year1.value;
     let year2 = search.year2.value;
     let culture = search.culture.value;
@@ -131,123 +125,9 @@ function calc() {
     }
 }
 
-function createChart() {
-    let name = arraysForChart();
-    if (x_arr_sorted.length > 1 && y_arr_sorted.length > 1) {
-        chart_error.innerHTML = "";
-        new_win = window.open("chart.html");
-        new_win.onload = function() {
-            let chart_holder = new_win.document.querySelector("#chart");
-            let trace1 = {
-                x: x_arr_sorted,
-                y: y_arr_sorted,
-                type: "scatter",
-                mode: "lines+markers",
-                name: name
-            };
-            data = new Array();
-            data.push(trace1);
-            let layout = {
-                showlegend: true
-            };
-            Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
-        }
-    } else {
-        chart_error.innerHTML = "Недостаточно данных для построения";
-    }
+function openChartWindow() {
+    new_win = window.open("chart.html");
 }
-
-function addToChart() {
-    let name = arraysForChart();
-    if(data == undefined) {
-        chart_error.innerHTML = "График не найден. Сначала постройте график";
-        return;
-    }
-    if (x_arr_sorted.length > 1 && y_arr_sorted.length > 1) {
-        chart_error.innerHTML = "";
-        let chart_holder = new_win.document.querySelector("#chart");
-        let trace1 = {
-            x: x_arr_sorted,
-            y: y_arr_sorted,
-            type: "scatter",
-            mode: "lines+markers",
-            name: name
-        };
-        data.push(trace1);
-        let layout = {
-            showlegend: true
-        };
-        Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
-    } else {
-        chart_error.innerHTML = "Недостаточно данных для построения";
-    }
-}
-
-function arraysForChart() {
-    let n1 = xaxes_select.selectedIndex;
-    let sel1_val = xaxes_options[n1].value;
-    let sel1_text = xaxes_options[n1].text;
-    let n2 = yaxes_select.selectedIndex;
-    let sel2_val = yaxes_options[n2].value;
-    let sel2_text = yaxes_options[n2].text;
-    let x_arr = new Array();
-    let y_arr = new Array();
-    for (let i = 0; i < cells.length; i++) {
-        let col = i % headers.length;
-        if (col == sel1_val) {
-            x_arr.push(cells[i].innerHTML);
-        } else if (col == sel2_val) {
-            y_arr.push(cells[i].innerHTML);
-        } else {
-            continue;
-        }
-        if (x_arr.length == y_arr.length && x_arr.length > 0) {
-            let a = parseFloat(+(x_arr[x_arr.length - 1]));
-            let b = parseFloat(+(y_arr[y_arr.length - 1]));
-            if (x_arr[x_arr.length - 1] == "" || y_arr[y_arr.length - 1] == "" ||
-                isNaN(a) || isNaN(b)) {
-                x_arr.pop();
-                y_arr.pop()
-            }
-        }
-    }
-    //сортировка по возрастанию х
-    x_arr_sorted = x_arr.slice();
-    y_arr_sorted = new Array();
-    x_arr_sorted.sort(function(a, b) { return a - b });
-    for (let i = 0; i < x_arr.length; i++) {
-        let old_index = x_arr.indexOf(x_arr_sorted[i]);
-        y_arr_sorted.push(y_arr[old_index]);
-        x_arr[old_index] = null;
-    }
-    return sel1_text + " и " + sel2_text;
-}
-
-xaxes_select.addEventListener("change", function() {
-    chart_error.innerHTML = "";
-    let n1 = xaxes_select.selectedIndex;
-    let n2 = yaxes_select.selectedIndex;
-    if (n1 == n2) {
-        if (n1 == 0) {
-            yaxes_select.selectedIndex = 1;
-        } else {
-            yaxes_select.selectedIndex = n1 - 1;
-        }
-    }
-})
-
-yaxes_select.addEventListener("change", function() {
-    chart_error.innerHTML = "";
-    let n1 = yaxes_select.selectedIndex;
-    let n2 = xaxes_select.selectedIndex;
-    if (n1 == n2) {
-        if (n1 == 0) {
-            xaxes_select.selectedIndex = 1;
-        } else {
-            xaxes_select.selectedIndex = n1 - 1;
-        }
-    }
-})
 
 content.onscroll = function() {
     invisible_table_header.style.left = (-content.scrollLeft + 5) + "px";
