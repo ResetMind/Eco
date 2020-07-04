@@ -10,6 +10,7 @@ let yaxes_select = document.querySelector("#yaxes");
 let xaxes_options = document.querySelectorAll("#xaxes option");
 let yaxes_options = document.querySelectorAll("#yaxes option");
 let chart_error = document.querySelector("#chart_error");
+let x_arr_sorted, y_arr_sorted, new_win, data;
 
 function find() {
     chart_error.innerHTML = "";
@@ -131,6 +132,58 @@ function calc() {
 }
 
 function createChart() {
+    let name = arraysForChart();
+    if (x_arr_sorted.length > 1 && y_arr_sorted.length > 1) {
+        chart_error.innerHTML = "";
+        new_win = window.open("chart.html");
+        new_win.onload = function() {
+            let chart_holder = new_win.document.querySelector("#chart");
+            let trace1 = {
+                x: x_arr_sorted,
+                y: y_arr_sorted,
+                type: "scatter",
+                mode: "lines+markers",
+                name: name
+            };
+            data = new Array();
+            data.push(trace1);
+            let layout = {
+                showlegend: true
+            };
+            Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
+        }
+    } else {
+        chart_error.innerHTML = "Недостаточно данных для построения";
+    }
+}
+
+function addToChart() {
+    let name = arraysForChart();
+    if(data == undefined) {
+        chart_error.innerHTML = "График не найден. Сначала постройте график";
+        return;
+    }
+    if (x_arr_sorted.length > 1 && y_arr_sorted.length > 1) {
+        chart_error.innerHTML = "";
+        let chart_holder = new_win.document.querySelector("#chart");
+        let trace1 = {
+            x: x_arr_sorted,
+            y: y_arr_sorted,
+            type: "scatter",
+            mode: "lines+markers",
+            name: name
+        };
+        data.push(trace1);
+        let layout = {
+            showlegend: true
+        };
+        Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
+    } else {
+        chart_error.innerHTML = "Недостаточно данных для построения";
+    }
+}
+
+function arraysForChart() {
     let n1 = xaxes_select.selectedIndex;
     let sel1_val = xaxes_options[n1].value;
     let sel1_text = xaxes_options[n1].text;
@@ -158,38 +211,16 @@ function createChart() {
             }
         }
     }
-    x_arr.sort(compare);
-    let x_arr2 = x_arr.slice();
-    for(let i = 0; i < x_arr2.length; i++) {
-        
+    //сортировка по возрастанию х
+    x_arr_sorted = x_arr.slice();
+    y_arr_sorted = new Array();
+    x_arr_sorted.sort(function(a, b) { return a - b });
+    for (let i = 0; i < x_arr.length; i++) {
+        let old_index = x_arr.indexOf(x_arr_sorted[i]);
+        y_arr_sorted.push(y_arr[old_index]);
+        x_arr[old_index] = null;
     }
-    if (x_arr.length > 1 && y_arr.length > 1) {
-        let new_win = window.open("chart.html");
-        new_win.onload = function() {
-            let chart_holder = new_win.document.querySelector("#chart");
-            let trace1 = {
-                x: x_arr,
-                y: y_arr,
-                type: "scatter",
-                mode: "lines+markers",
-                name: sel1_text + " и " + sel2_text
-            };
-            let data = [trace1];
-            let layout = {
-                title: sel1_text + " и " + sel2_text,
-                showlegend: true
-            };
-            Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true });
-        }
-    } else {
-        chart_error.innerHTML = "Недостаточно данных для построения";
-    }
-}
-
-function compare(a, b) {
-    if (a > b) return 1;
-    if (a == b) return 0;
-    if (a < b) return -1;
+    return sel1_text + " и " + sel2_text;
 }
 
 xaxes_select.addEventListener("change", function() {
