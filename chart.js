@@ -6,8 +6,10 @@ let chart_error = document.querySelector("#chart_error");
 let chart_holder = document.querySelector("#chart_holder");
 let used_charts = document.querySelector(".used_charts");
 let add_button = document.querySelector(".add");
-let x_arr_sorted, y_arr_sorted, year_arr_sorted, new_win, data = new Array(), data2 = new Array(),
-    years = new Array(), div_index;
+let x_arr_sorted, y_arr_sorted, year_arr_sorted, new_win, data = new Array(),
+    data2 = new Array(),
+    years = new Array(),
+    div_index;
 let headers = window.opener.document.querySelectorAll("#invisible_table3_header th");
 let cells = window.opener.document.querySelectorAll("#table3_body td");
 let layout = { showlegend: true };
@@ -15,7 +17,7 @@ let modal = document.querySelector(".modal");
 let modal_body = document.querySelector(".modal_body");
 let close_modal_btn = document.querySelector(".close_modal");
 let overlay = document.querySelector(".overlay");
-let checkboxes;
+let checkboxes, checkall_checkbox;
 newPlot();
 
 add_button.addEventListener("click", function() {
@@ -173,14 +175,14 @@ function openModal() {
     let chart_info = div.querySelector(".chart_info").innerHTML;
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
-    let inner_html = "<table id=\"table_modal\" align=\"center\"><thead><tr><th></th>";
-    if(x_name != "Год" && y_name != "Год") {
-        inner_html += "<td>Год</td>";
+    let inner_html = "<table id=\"table_modal\" align=\"center\"><thead><tr><th><input type=\"checkbox\" class=\"checkall_checkbox\"></th>";
+    if (x_name != "Год" && y_name != "Год") {
+        inner_html += "<th>Год</th>";
     }
-    inner_html += "<td>" + x_name + "</td>" + "<td>" + y_name + "</td></tr></thead><tbody>";
-    for(let k = 0; k < data[i].x.length; k++) {
-        inner_html += "<tr><td><input type=\"checkbox\"></td>";
-        if(x_name != "Год" && y_name != "Год") {
+    inner_html += "<th>" + x_name + "</th>" + "<th>" + y_name + "</th></tr></thead><tbody>";
+    for (let k = 0; k < data[i].x.length; k++) {
+        inner_html += "<tr><td><input type=\"checkbox\" class=\"td_checkbox\"></td>";
+        if (x_name != "Год" && y_name != "Год") {
             inner_html += "<td>" + years[i][k] + "</td>";
         }
         inner_html += "<td>" + data[i].x[k] + "</td>";
@@ -188,37 +190,64 @@ function openModal() {
     }
     inner_html += "</tbody></table>";
     modal_body.innerHTML = inner_html;
-    checkboxes = modal_body.querySelectorAll("input[type=\"checkbox\"]");
-    for(let k = 0; k < checkboxes.length; k++) {
-        if(!data[i].x[k].includes("span")) {
+    checkboxes = modal_body.querySelectorAll("input[type=\"checkbox\"].td_checkbox");
+    checkall_checkbox = modal_body.querySelector("input[type=\"checkbox\"].checkall_checkbox");
+    let checked_count = 0;
+    for (let k = 0; k < checkboxes.length; k++) {
+        if (!data[i].x[k].includes("span")) {
             checkboxes[k].checked = true;
+            checked_count++;
         } else {
             checkboxes[k].checked = false;
         }
         checkboxes[k].addEventListener("change", onCheckboxChange);
     }
+    if(checked_count == checkboxes.length) {
+        checkall_checkbox.checked = true;
+    }
+    checkall_checkbox.addEventListener("change", onCheckboxChange);
 }
 
 function onCheckboxChange() {
-    for(let k = 0; k < checkboxes.length; k++) {
-        if(checkboxes[k].checked) {
-            data[div_index].x[k] = data[div_index].x[k].replace("<span>", "");
-            data[div_index].x[k] = data[div_index].x[k].replace("</span>", "");
-        } else if(!data[div_index].x[k].includes("span")){
-            data[div_index].x[k] = "<span>" + data[div_index].x[k] + "</span>";
+    let e = window.event;
+    let checkbox = e.currentTarget;
+    let checked_count = 0;
+    if (checkbox != checkall_checkbox) {
+        for (let k = 0; k < checkboxes.length; k++) {
+            if (checkboxes[k].checked) {
+                data[div_index].x[k] = data[div_index].x[k].replace("<span>", "");
+                data[div_index].x[k] = data[div_index].x[k].replace("</span>", "");
+                checked_count++;
+            } else if (!data[div_index].x[k].includes("span")) {
+                data[div_index].x[k] = "<span>" + data[div_index].x[k] + "</span>";
+                checkall_checkbox.checked = false;
+            }
         }
-        console.log(data[div_index].x[k]);
+    } else {
+        for (let k = 0; k < checkboxes.length; k++) {
+            if (checkall_checkbox.checked) {
+                data[div_index].x[k] = data[div_index].x[k].replace("<span>", "");
+                data[div_index].x[k] = data[div_index].x[k].replace("</span>", "");
+                checkboxes[k].checked = true;
+            } else if (!data[div_index].x[k].includes("span")) {
+                data[div_index].x[k] = "<span>" + data[div_index].x[k] + "</span>";
+                checkboxes[k].checked = false;
+            }
+        }
     }
-    console.log("-----------------------");
+    if(checked_count == checkboxes.length) {
+        checkall_checkbox.checked = true;
+    }
     newPlot();
 }
 
 function closeModal() {
     modal.classList.remove('active');
     overlay.classList.remove('active');
-    for(let k = 0; k < checkboxes.length; k++) {
+    for (let k = 0; k < checkboxes.length; k++) {
         checkboxes[k].removeEventListener("change", onCheckboxChange);
     }
+    checkall_checkbox.removeEventListener("change", onCheckboxChange);
 }
 
 close_modal_btn.onclick = function() {

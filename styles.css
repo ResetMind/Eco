@@ -220,9 +220,9 @@ input[type="button"]:hover {
 .modal {
     opacity: 0;
     visibility: hidden;
-    width: 100%;
-    max-width: 500px;
-    max-height: 100%;
+    width: 250px;
+    /*max-width: 500px;*/
+    max-height: 500px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -232,6 +232,16 @@ input[type="button"]:hover {
     padding: 5px;
     background-color: #1f1f1f;
     transition-duration: 0.3s;
+}
+
+.modal_body {
+    max-height: 455px;
+    overflow: auto;
+    padding-top: 5px;
+}
+
+#table_modal {
+    font-size: 14px;
 }
 
 .modal.active,
