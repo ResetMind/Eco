@@ -6,10 +6,15 @@ let chart_error = document.querySelector("#chart_error");
 let chart_holder = document.querySelector("#chart_holder");
 let used_charts = document.querySelector(".used_charts");
 let add_button = document.querySelector(".add");
-let x_arr_sorted, y_arr_sorted, new_win, data = new Array();
+let x_arr_sorted, y_arr_sorted, year_arr_sorted, new_win, data = new Array(),
+    years = new Array();
 let headers = window.opener.document.querySelectorAll("#invisible_table3_header th");
 let cells = window.opener.document.querySelectorAll("#table3_body td");
 let layout = { showlegend: true };
+let modal = document.querySelector(".modal");
+let modal_body = document.querySelector(".modal_body");
+let close_modal_btn = document.querySelector(".close_modal");
+let overlay = document.querySelector(".overlay");
 newPlot();
 
 add_button.addEventListener("click", function() {
@@ -30,6 +35,8 @@ add_button.addEventListener("click", function() {
         let div = document.createElement("div");
         div.className = "used_chart";
         div.innerHTML = "<span class=\"chart_info\">" + chart_name + "</span><span class=\"delete_chart\"> &times;</span>";
+        div.innerHTML
+        div.addEventListener("click", openModal);
         used_charts.append(div);
         createDeleteLisneners();
     }
@@ -39,14 +46,17 @@ function createDeleteLisneners() {
     let delete_chart_buttons = document.querySelectorAll(".delete_chart");
     for (let i = 0; i < delete_chart_buttons.length; i++) {
         delete_chart_buttons[i].onclick = function f() {
+            used_charts.childNodes[i].removeEventListener("click", openModal);
             used_charts.childNodes[i].remove();
-            console.log(data.length);
             refreshCharts(i);
-            console.log(data.length);
             delete_chart_buttons[i].removeEventListener("click", f);
             createDeleteLisneners();
         }
     }
+}
+
+function createOpenModalListeners() {
+
 }
 
 function addChart(chart_name) {
@@ -60,6 +70,7 @@ function addChart(chart_name) {
             name: chart_name
         };
         data.push(trace1);
+        years.push(year_arr_sorted);
         newPlot();
         return true;
     } else {
@@ -70,6 +81,7 @@ function addChart(chart_name) {
 
 function refreshCharts(i) {
     data.splice(i, 1);
+    years.splice(i, 1);
     newPlot();
 }
 
@@ -78,6 +90,7 @@ function arraysForChart(n1, n2) {
     let sel2_val = yaxes_options[n2].value;
     let x_arr = new Array();
     let y_arr = new Array();
+    let year_arr = new Array();
     cells = window.opener.document.querySelectorAll("#table3_body td");
     for (let i = 0; i < cells.length; i++) {
         let col = i % headers.length;
@@ -85,6 +98,8 @@ function arraysForChart(n1, n2) {
             x_arr.push(cells[i].innerHTML);
         } else if (col == sel2_val) {
             y_arr.push(cells[i].innerHTML);
+        } else if (col == 0) {
+            year_arr.push(cells[i].innerHTML)
         } else {
             continue;
         }
@@ -94,17 +109,20 @@ function arraysForChart(n1, n2) {
             if (x_arr[x_arr.length - 1] == "" || y_arr[y_arr.length - 1] == "" ||
                 isNaN(a) || isNaN(b)) {
                 x_arr.pop();
-                y_arr.pop()
+                y_arr.pop();
+                year_arr.pop();
             }
         }
     }
     //сортировка по возрастанию х
     x_arr_sorted = x_arr.slice();
     y_arr_sorted = new Array();
+    year_arr_sorted = new Array();
     x_arr_sorted.sort(function(a, b) { return a - b });
     for (let i = 0; i < x_arr.length; i++) {
         let old_index = x_arr.indexOf(x_arr_sorted[i]);
         y_arr_sorted.push(y_arr[old_index]);
+        year_arr_sorted.push(year_arr[old_index]);
         x_arr[old_index] = null;
     }
 }
@@ -137,4 +155,49 @@ yaxes_select.addEventListener("change", function() {
 
 function newPlot() {
     Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true, responsive: true });
+}
+
+function openModal() {
+    modal.classList.add("active");
+    overlay.classList.add("active");
+    let e = window.event;
+    let div = e.currentTarget;
+    let nodes = used_charts.childNodes;
+    let i;
+    for (i = 0; i < nodes.length; i++) {
+        if (div == nodes[i]) {
+            break;
+        }
+    }
+    let chart_info = div.querySelector(".chart_info").innerHTML;
+    let x_name = chart_info.split(" и ")[0];
+    let y_name = chart_info.split(" и ")[1];
+    let inner_html = "<table id=\"table_modal\" align=\"center\"><thead><tr><th></th>";
+    if(x_name != "Год") {
+        inner_html += "<td>Год</td>";
+    }
+    inner_html += "<td>" + x_name + "</td>" + "<td>" + y_name + "</td></tr></thead><tbody>";
+    for(let k = 0; k < data[i].x.length; k++) {
+        inner_html += "<tr><td><input type=\"checkbox\" checked></td>";
+        if(x_name != "Год") {
+            inner_html += "<td>" + years[i][k] + "</td>";
+        }
+        inner_html += "<td>" + data[i].x[k] + "</td>";
+        inner_html += "<td>" + data[i].y[k] + "</td></tr>";
+    }
+    inner_html += "</tbody></table>";
+    modal_body.innerHTML = inner_html;
+}
+
+function closeModal() {
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
+}
+
+close_modal_btn.onclick = function() {
+    closeModal();
+}
+
+overlay.onclick = function() {
+    closeModal();
 }
