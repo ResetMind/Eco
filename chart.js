@@ -19,6 +19,15 @@ let close_modal_btn = document.querySelector(".close_modal");
 let overlay = document.querySelector(".overlay");
 let checkboxes, checkall_checkbox;
 newPlot();
+let a = [
+    [0.38, -0.05, 0.01, 0.02, 0.07],
+    [0.052, 0.595, 0, -0.04, 0.04],
+    [0.03, 0, 0.478, -0.14, 0.08],
+    [-0.06, 1.26, 0, 0.47, -0.02],
+    [0.25, 0, 0.09, 0.01, 0.56]
+];
+let b = [0.75, -0.858, 3.16, -1.802, 2.91];
+holeckiy(a, b);
 
 add_button.addEventListener("click", function() {
     let used_chart = document.querySelectorAll(".used_chart .chart_info");
@@ -202,7 +211,7 @@ function openModal() {
         }
         checkboxes[k].addEventListener("change", onCheckboxChange);
     }
-    if(checked_count == checkboxes.length) {
+    if (checked_count == checkboxes.length) {
         checkall_checkbox.checked = true;
     }
     checkall_checkbox.addEventListener("change", onCheckboxChange);
@@ -235,7 +244,7 @@ function onCheckboxChange() {
             }
         }
     }
-    if(checked_count == checkboxes.length) {
+    if (checked_count == checkboxes.length) {
         checkall_checkbox.checked = true;
     }
     newPlot();
