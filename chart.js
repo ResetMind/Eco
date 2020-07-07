@@ -10,7 +10,7 @@ let add_button = document.querySelector(".add");
 let x_arr_sorted, y_arr_sorted, year_arr_sorted, new_win, data = new Array(),
     data2 = new Array(),
     years = new Array(),
-    div_index;
+    div_index, chart_info, trend_index;
 let headers = window.opener.document.querySelectorAll("#invisible_table3_header th");
 let cells = window.opener.document.querySelectorAll("#table3_body td");
 let layout = { showlegend: true };
@@ -81,8 +81,19 @@ function addChart(chart_name) {
             connectgaps: true,
             name: chart_name
         };
-        data.push(trace1);
-        data2.push(trace1);
+        let trend_start = -1;
+        for (k = 0; k < data.length; k++) {
+            if (data[k].name.includes("тренд")) {
+                trend_start = k;
+                break;
+            }
+        }
+        //данные-нетренды всегда должны быть все слева
+        if (trend_start != -1) {
+            data.splice(trend_start, 0, trace1);
+        } else {
+            data.push(trace1);
+        }
         years.push(year_arr_sorted);
         newPlot();
         return true;
@@ -93,8 +104,15 @@ function addChart(chart_name) {
 }
 
 function refreshChartsAfterDelete(i) {
+    // на случай если удаляешь чарт, для которого построен тренд. Чтобы оба удалились
+    let chart_name = data[i].name;
+    for (let k = i + 1; k < data.length; k++) {
+        if (data[k].name.includes(chart_name + " тренд")) {
+            data.splice(k, 1);
+            break;
+        }
+    }
     data.splice(i, 1);
-    data2.splice(i, 1);
     years.splice(i, 1);
     newPlot();
 }
@@ -184,7 +202,8 @@ function openModal() {
         }
     }
     div_index = i;
-    let chart_info = div.querySelector(".chart_info").innerHTML;
+    chart_info = div.querySelector(".chart_info").innerHTML;
+    trend_index = findTrendIndex();
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
     let inner_html = "Используемые данные:<table id=\"table_modal_left\" align=\"center\"><thead><tr><th><input type=\"checkbox\" class=\"checkall_checkbox\"></th>";
@@ -258,21 +277,66 @@ trend_type_select.addEventListener("change", onTrendTypeChangeListener);
 function onTrendTypeChangeListener() {
     let n = trend_type_select.selectedIndex;
     let value = trend_type_options[n].value;
-    if(value == 0) {
+    trend_index = findTrendIndex();
+    if (value == 0 && trend_index != -1) {
+        // тут удаляем тренд выбранной линии если есть
+        data.splice(trend_index, 1);
+        newPlot();
         return;
     }
     let x = new Array();
     let y = new Array();
-    for(let k = 0; k < data[div_index].x.length; k++) {
-        if(!data[div_index].x[k].includes("span")) {
+    for (let k = 0; k < data[div_index].x.length; k++) {
+        if (!data[div_index].x[k].includes("span")) {
             x.push(parseFloat(data[div_index].x[k]));
             y.push(parseFloat(data[div_index].y[k]));
         }
     }
-    if(value == 1) {
-        linear(x, y);
-        console.log(d3colors);
+    if (value == 1) {
+        console.log("trend_index " + trend_index);
+        if(isItTheSameTrend("прямая")) {
+            return;
+        }
+        y = linear(x, y);
+        addTrendToChart(x, y);
+        console.log("data.length " + data.length);
     }
+
+    function addTrendToChart(x_arr, y_arr) {
+        let trace1 = {
+            x: x_arr,
+            y: y_arr,
+            type: "scatter",
+            mode: "lines+markers",
+            connectgaps: true,
+            name: chart_info + " тренд (прямая)"
+        };
+        // если какой-то тренд уже есть, заменяем его на новый
+        if (trend_index == -1) {
+            data.push(trace1);
+        } else {
+            data[trend_index] = trace1;
+        }
+        newPlot();
+    }
+    function isItTheSameTrend(type){
+        if (trend_index != -1) {
+            if (data[trend_index].name.includes(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+function findTrendIndex() {
+    let index = -1;
+    for (let k = div_index + 1; k < data.length; k++) {
+        if (data[k].name.includes(chart_info)) {
+            index = k;
+        }
+    }
+    return index;
 }
 
 function closeModal() {
