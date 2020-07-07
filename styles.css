@@ -220,7 +220,7 @@ input[type="button"]:hover {
 .modal {
     opacity: 0;
     visibility: hidden;
-    width: 250px;
+    width: 500px;
     /*max-width: 500px;*/
     max-height: 500px;
     position: fixed;
@@ -234,13 +234,20 @@ input[type="button"]:hover {
     transition-duration: 0.3s;
 }
 
-.modal_body {
+.modal_body_left, .modal_body_right {
     max-height: 455px;
     overflow: auto;
     padding-top: 5px;
+    float: left;
+}
+
+.modal_body_right {
+    background-color: #6d6d6d;
+    margin-left: 15px;
 }
 
 #table_modal {
+    margin-top: 5px;
     font-size: 14px;
 }
 

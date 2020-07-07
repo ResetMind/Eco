@@ -144,15 +144,18 @@
     </div>
     <div class="modal">
         <span class="close_modal">&#215;</span>
-        <div style="clear: right;">
+        <div class="modal_body_left">
             Используемые данные:
         </div>
-        <div class="modal_body">
-
+        <div class="modal_body_right">
+            Линии тренда:
+            <p><input name="trend_type" type="radio" value="linear"> Линейный</p>
+            <p><input name="trend_type" type="radio" value="nonlinear"> nonЛинейный</p>
         </div>
+        <div style="width:100%; height:1px; clear:both;"></div>
     </div>
     <div class="overlay"></div>
-    <script src="holeckiy.js"></script>
+    <script src="trends.js"></script>
     <script src="chart.js"></script>
 </body>
 

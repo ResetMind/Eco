@@ -14,7 +14,7 @@ let headers = window.opener.document.querySelectorAll("#invisible_table3_header 
 let cells = window.opener.document.querySelectorAll("#table3_body td");
 let layout = { showlegend: true };
 let modal = document.querySelector(".modal");
-let modal_body = document.querySelector(".modal_body");
+let modal_body_left = document.querySelector(".modal_body_left");
 let close_modal_btn = document.querySelector(".close_modal");
 let overlay = document.querySelector(".overlay");
 let checkboxes, checkall_checkbox;
@@ -184,7 +184,7 @@ function openModal() {
     let chart_info = div.querySelector(".chart_info").innerHTML;
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
-    let inner_html = "<table id=\"table_modal\" align=\"center\"><thead><tr><th><input type=\"checkbox\" class=\"checkall_checkbox\"></th>";
+    let inner_html = "Используемые данные:<table id=\"table_modal\" align=\"center\"><thead><tr><th><input type=\"checkbox\" class=\"checkall_checkbox\"></th>";
     if (x_name != "Год" && y_name != "Год") {
         inner_html += "<th>Год</th>";
     }
@@ -198,9 +198,9 @@ function openModal() {
         inner_html += "<td>" + data[i].y[k] + "</td></tr>";
     }
     inner_html += "</tbody></table>";
-    modal_body.innerHTML = inner_html;
-    checkboxes = modal_body.querySelectorAll("input[type=\"checkbox\"].td_checkbox");
-    checkall_checkbox = modal_body.querySelector("input[type=\"checkbox\"].checkall_checkbox");
+    modal_body_left.innerHTML = inner_html;
+    checkboxes = modal_body_left.querySelectorAll("input[type=\"checkbox\"].td_checkbox");
+    checkall_checkbox = modal_body_left.querySelector("input[type=\"checkbox\"].checkall_checkbox");
     let checked_count = 0;
     for (let k = 0; k < checkboxes.length; k++) {
         if (!data[i].x[k].includes("span")) {
@@ -215,6 +215,10 @@ function openModal() {
         checkall_checkbox.checked = true;
     }
     checkall_checkbox.addEventListener("change", onCheckboxChange);
+    let radios = document.querySelectorAll("input[type=\"radio\"]");
+    for (let k = 0; k < radios.length; k++) {
+        radios[k].addEventListener("change", onRadioChange);
+    }
 }
 
 function onCheckboxChange() {
@@ -250,6 +254,13 @@ function onCheckboxChange() {
     newPlot();
 }
 
+function onRadioChange() {
+    linear(data[div_index].x, data[div_index].y);
+    /*for (let k = 0; k < radios.length; k++) {
+
+    }*/
+}
+
 function closeModal() {
     modal.classList.remove('active');
     overlay.classList.remove('active');
@@ -257,6 +268,9 @@ function closeModal() {
         checkboxes[k].removeEventListener("change", onCheckboxChange);
     }
     checkall_checkbox.removeEventListener("change", onCheckboxChange);
+    /*for (let k = 0; k < radios.length; k++) {
+        radios[k].removeEventListener("change", onRadioChange);
+    }*/
 }
 
 close_modal_btn.onclick = function() {
