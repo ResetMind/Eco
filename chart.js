@@ -1,3 +1,4 @@
+var d3colors = Plotly.d3.scale.category10();
 let xaxes_select = document.querySelector("#xaxes");
 let yaxes_select = document.querySelector("#yaxes");
 let xaxes_options = document.querySelectorAll("#xaxes option");
@@ -17,9 +18,11 @@ let modal = document.querySelector(".modal");
 let modal_body_left = document.querySelector(".modal_body_left");
 let close_modal_btn = document.querySelector(".close_modal");
 let overlay = document.querySelector(".overlay");
-let checkboxes, checkall_checkbox;
+let checkboxes, checkall_checkbox, radios;
+let trend_type_select = document.querySelector("#trend_type");
+let trend_type_options = document.querySelectorAll("#trend_type option");
 newPlot();
-let a = [
+/*let a = [
     [0.38, -0.05, 0.01, 0.02, 0.07],
     [0.052, 0.595, 0, -0.04, 0.04],
     [0.03, 0, 0.478, -0.14, 0.08],
@@ -27,7 +30,7 @@ let a = [
     [0.25, 0, 0.09, 0.01, 0.56]
 ];
 let b = [0.75, -0.858, 3.16, -1.802, 2.91];
-holeckiy(a, b);
+holeckiy(a, b);*/
 
 add_button.addEventListener("click", function() {
     let used_chart = document.querySelectorAll(".used_chart .chart_info");
@@ -184,7 +187,7 @@ function openModal() {
     let chart_info = div.querySelector(".chart_info").innerHTML;
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
-    let inner_html = "Используемые данные:<table id=\"table_modal\" align=\"center\"><thead><tr><th><input type=\"checkbox\" class=\"checkall_checkbox\"></th>";
+    let inner_html = "Используемые данные:<table id=\"table_modal_left\" align=\"center\"><thead><tr><th><input type=\"checkbox\" class=\"checkall_checkbox\"></th>";
     if (x_name != "Год" && y_name != "Год") {
         inner_html += "<th>Год</th>";
     }
@@ -215,10 +218,6 @@ function openModal() {
         checkall_checkbox.checked = true;
     }
     checkall_checkbox.addEventListener("change", onCheckboxChange);
-    let radios = document.querySelectorAll("input[type=\"radio\"]");
-    for (let k = 0; k < radios.length; k++) {
-        radios[k].addEventListener("change", onRadioChange);
-    }
 }
 
 function onCheckboxChange() {
@@ -254,11 +253,26 @@ function onCheckboxChange() {
     newPlot();
 }
 
-function onRadioChange() {
-    linear(data[div_index].x, data[div_index].y);
-    /*for (let k = 0; k < radios.length; k++) {
+trend_type_select.addEventListener("change", onTrendTypeChangeListener);
 
-    }*/
+function onTrendTypeChangeListener() {
+    let n = trend_type_select.selectedIndex;
+    let value = trend_type_options[n].value;
+    if(value == 0) {
+        return;
+    }
+    let x = new Array();
+    let y = new Array();
+    for(let k = 0; k < data[div_index].x.length; k++) {
+        if(!data[div_index].x[k].includes("span")) {
+            x.push(parseFloat(data[div_index].x[k]));
+            y.push(parseFloat(data[div_index].y[k]));
+        }
+    }
+    if(value == 1) {
+        linear(x, y);
+        console.log(d3colors);
+    }
 }
 
 function closeModal() {
@@ -268,9 +282,6 @@ function closeModal() {
         checkboxes[k].removeEventListener("change", onCheckboxChange);
     }
     checkall_checkbox.removeEventListener("change", onCheckboxChange);
-    /*for (let k = 0; k < radios.length; k++) {
-        radios[k].removeEventListener("change", onRadioChange);
-    }*/
 }
 
 close_modal_btn.onclick = function() {

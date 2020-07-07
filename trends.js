@@ -5,7 +5,6 @@ function linear(x, y) {
     a[0][1] = 0;
     a[1][1] = 0;
     for(let i = 0; i < x.length; i++) {
-        x[i] = parseFloat(x[i]);
         a[0][1] += x[i];
         a[1][1] += x[i] * x[i];
     }
@@ -13,7 +12,6 @@ function linear(x, y) {
     b[0] = 0;
     b[1] = 0;
     for(let i = 0; i < y.length; i++) {
-        y[i] = parseFloat(y[i]);
         b[0] += y[i];
         b[1] += y[i] * x[i];
     }

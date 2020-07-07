@@ -122,7 +122,6 @@ header ul li ul li {
 }
 
 input[type="text"],
-input[type="number"],
 input[type="button"],
 select {
     background: #1f1f1f;
@@ -148,7 +147,7 @@ input[type="button"]:hover {
 
 /*chart*/
 
-.graphparams label {
+.graphparams label, .modal label {
     font-size: 14px;
 }
 
@@ -242,13 +241,25 @@ input[type="button"]:hover {
 }
 
 .modal_body_right {
-    background-color: #6d6d6d;
     margin-left: 15px;
 }
 
-#table_modal {
+#table_modal_left, #table_modal_right {
+    text-align: left;
     margin-top: 5px;
     font-size: 14px;
+}
+
+#table_modal_right input[type="radio"] {
+    margin-left: 0px;
+}
+
+input[type="number"] {
+    background: #1f1f1f;
+    border: 0px solid #3a3a3a;
+    color: #f4f8f9;
+    outline: none;
+    font-family: "Nunito", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 .modal.active,

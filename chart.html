@@ -148,9 +148,16 @@
             Используемые данные:
         </div>
         <div class="modal_body_right">
-            Линии тренда:
-            <p><input name="trend_type" type="radio" value="linear"> Линейный</p>
-            <p><input name="trend_type" type="radio" value="nonlinear"> nonЛинейный</p>
+            Линии тренда:<br>
+            <label for="trend_type">Тип:</label>
+            <select id="trend_type" name="trend_type">
+                <option value="0" selected>Нет</option>
+                <option value="1">Прямая</option>
+                <option value="2">Гипербола</option>
+                <option value="3">Парабола</option>
+                <option value="4">Экспонента</option>
+                <option value="5">Степенная</option>
+            </select>
         </div>
         <div style="width:100%; height:1px; clear:both;"></div>
     </div>
