@@ -123,6 +123,7 @@ header ul li ul li {
 
 input[type="text"],
 input[type="button"],
+input[type="number"],
 select {
     background: #1f1f1f;
     border: 1px solid #3a3a3a;
@@ -254,13 +255,13 @@ input[type="button"]:hover {
     margin-left: 0px;
 }
 
-input[type="number"] {
+/*input[type="number"] {
     background: #1f1f1f;
-    border: 0px solid #3a3a3a;
+    border: 1px solid #3a3a3a;
     color: #f4f8f9;
     outline: none;
     font-family: "Nunito", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-}
+}*/
 
 .modal.active,
 .overlay.active {

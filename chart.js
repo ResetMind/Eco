@@ -346,9 +346,6 @@ function onTrendTypeChangeListener() {
         }
     }
     if (value == 1) {
-        /*if (isItTheSameTrend("прямая")) {
-            return;
-        }*/
         if (x.length != 0) {
             y = linear(x, y);
         } else {
@@ -356,6 +353,24 @@ function onTrendTypeChangeListener() {
             y.push(null);
         }
         addTrendToChart(x, y, chart_info + " тренд (прямая)");
+        trend_index = findTrendIndex(div_index, chart_info);
+    } else if(value == 2) {
+        if (x.length != 0) {
+            y = hyperbole(x, y);
+        } else {
+            x.push(null);
+            y.push(null);
+        }
+        addTrendToChart(x, y, chart_info + " тренд (гипербола)");
+        trend_index = findTrendIndex(div_index, chart_info);
+    } else if(value == 3) {
+        if (x.length != 0) {
+            y = parabole3(x, y);
+        } else {
+            x.push(null);
+            y.push(null);
+        }
+        addTrendToChart(x, y, chart_info + " тренд (парабола n=2)");
         trend_index = findTrendIndex(div_index, chart_info);
     }
 
