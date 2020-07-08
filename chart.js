@@ -204,6 +204,15 @@ function openModal() {
     div_index = i;
     chart_info = div.querySelector(".chart_info").innerHTML;
     trend_index = findTrendIndex();
+    // надо отобразить название построенного тренда в комбо, если есть
+    if(trend_index != -1) {
+        let name = data[trend_index].name;
+        if(name.includes("прямая")) {
+            trend_type_select.selectedIndex = 1;
+        }
+    } else {
+        trend_type_select.selectedIndex = 0;
+    }
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
     let inner_html = "Используемые данные:<table id=\"table_modal_left\" align=\"center\"><thead><tr><th><input type=\"checkbox\" class=\"checkall_checkbox\"></th>";
@@ -325,21 +334,21 @@ function onTrendTypeChangeListener() {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y);
+        addTrendToChart(x, y, chart_info + " тренд (прямая)");
         trend_index = findTrendIndex();
     }
 
     console.log("TREND INDEX " + trend_index);
     console.log("DATA LENGTH " + data.length);
 
-    function addTrendToChart(x_arr, y_arr) {
+    function addTrendToChart(x_arr, y_arr, name) {
         let trace1 = {
             x: x_arr,
             y: y_arr,
             type: "scatter",
             mode: "lines+markers",
             connectgaps: true,
-            name: chart_info + " тренд (прямая)"
+            name: name
         };
         // если какой-то тренд уже есть, заменяем его на новый
         if (trend_index == -1) {
