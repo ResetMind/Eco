@@ -246,23 +246,32 @@ function onCheckboxChange() {
     if (checkbox != checkall_checkbox) {
         for (let k = 0; k < checkboxes.length; k++) {
             if (checkboxes[k].checked) {
-                data[div_index].x[k] = data[div_index].x[k].replace("<span>", "");
-                data[div_index].x[k] = data[div_index].x[k].replace("</span>", "");
+                removeSpans(k, div_index);
                 checked_count++;
             } else if (!data[div_index].x[k].includes("span")) {
-                data[div_index].x[k] = "<span>" + data[div_index].x[k] + "</span>";
+                addSpans(k, div_index);
                 checkall_checkbox.checked = false;
             }
         }
+        if (trend_index != -1) {
+            onTrendTypeChangeListener();
+        }
     } else {
-        for (let k = 0; k < checkboxes.length; k++) {
-            if (checkall_checkbox.checked) {
-                data[div_index].x[k] = data[div_index].x[k].replace("<span>", "");
-                data[div_index].x[k] = data[div_index].x[k].replace("</span>", "");
+        if (checkall_checkbox.checked) {
+            for (let k = 0; k < checkboxes.length; k++) {
+                removeSpans(k, div_index);
                 checkboxes[k].checked = true;
-            } else if (!data[div_index].x[k].includes("span")) {
-                data[div_index].x[k] = "<span>" + data[div_index].x[k] + "</span>";
+            }
+            if (trend_index != -1) {
+                onTrendTypeChangeListener();
+            }
+        } else {
+            for (let k = 0; k < checkboxes.length; k++) {
+                addSpans(k, div_index);
                 checkboxes[k].checked = false;
+            }
+            if (trend_index != -1) {
+                onTrendTypeChangeListener();
             }
         }
     }
@@ -270,6 +279,17 @@ function onCheckboxChange() {
         checkall_checkbox.checked = true;
     }
     newPlot();
+
+    function removeSpans(k, index) {
+        data[index].x[k] = data[index].x[k].replace("<span>", "");
+        data[index].x[k] = data[index].x[k].replace("</span>", "");
+    }
+
+    function addSpans(k, index) {
+        if (!data[index].x[k].includes("span")) {
+            data[index].x[k] = "<span>" + data[index].x[k] + "</span>";
+        }
+    }
 }
 
 trend_type_select.addEventListener("change", onTrendTypeChangeListener);
@@ -281,7 +301,10 @@ function onTrendTypeChangeListener() {
     if (value == 0 && trend_index != -1) {
         // тут удаляем тренд выбранной линии если есть
         data.splice(trend_index, 1);
+        trend_index = findTrendIndex();
         newPlot();
+        console.log("TREND INDEX " + trend_index);
+        console.log("DATA LENGTH " + data.length);
         return;
     }
     let x = new Array();
@@ -293,14 +316,21 @@ function onTrendTypeChangeListener() {
         }
     }
     if (value == 1) {
-        console.log("trend_index " + trend_index);
-        if(isItTheSameTrend("прямая")) {
+        /*if (isItTheSameTrend("прямая")) {
             return;
+        }*/
+        if (x.length != 0) {
+            y = linear(x, y);
+        } else {
+            x.push(null);
+            y.push(null);
         }
-        y = linear(x, y);
         addTrendToChart(x, y);
-        console.log("data.length " + data.length);
+        trend_index = findTrendIndex();
     }
+
+    console.log("TREND INDEX " + trend_index);
+    console.log("DATA LENGTH " + data.length);
 
     function addTrendToChart(x_arr, y_arr) {
         let trace1 = {
@@ -319,7 +349,8 @@ function onTrendTypeChangeListener() {
         }
         newPlot();
     }
-    function isItTheSameTrend(type){
+
+    function isItTheSameTrend(type) {
         if (trend_index != -1) {
             if (data[trend_index].name.includes(type)) {
                 return true;
