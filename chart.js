@@ -1,4 +1,3 @@
-var d3colors = Plotly.d3.scale.category10();
 let xaxes_select = document.querySelector("#xaxes");
 let yaxes_select = document.querySelector("#yaxes");
 let xaxes_options = document.querySelectorAll("#xaxes option");
@@ -21,6 +20,18 @@ let overlay = document.querySelector(".overlay");
 let checkboxes, checkall_checkbox, radios;
 let trend_type_select = document.querySelector("#trend_type");
 let trend_type_options = document.querySelectorAll("#trend_type option");
+let colors = [
+    "rgba(31, 119, 180, 0.5)",
+    "rgba(255, 127, 14, 0.5)",
+    "rgba(44, 160, 44, 0.5)",
+    "rgba(214, 39, 40, 0.5)",
+    "rgba(148, 103, 189, 0.5)",
+    "rgba(140, 86, 75, 0.5)",
+    "rgba(227, 119, 194, 0.5)",
+    "rgba(127, 127, 127, 0.5)",
+    "rgba(188, 189, 34, 0.5)",
+    "rgba(23, 190, 207, 0.5)"
+];
 newPlot();
 /*let a = [
     [0.38, -0.05, 0.01, 0.02, 0.07],
@@ -186,6 +197,16 @@ yaxes_select.addEventListener("change", function() {
 })
 
 function newPlot() {
+    // чтобы цвета трендов были почти такие же, как и у обычного графика
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].name.includes("тренд")) {
+            break;
+        }
+        let index = findTrendIndex(i, data[i].name);
+        if (index != -1) {
+            data[index].line.color = colors[i];
+        }
+    }
     Plotly.newPlot(chart_holder, data, layout, { scrollZoom: true, responsive: true });
 }
 
@@ -203,11 +224,11 @@ function openModal() {
     }
     div_index = i;
     chart_info = div.querySelector(".chart_info").innerHTML;
-    trend_index = findTrendIndex();
+    trend_index = findTrendIndex(div_index, chart_info);
     // надо отобразить название построенного тренда в комбо, если есть
-    if(trend_index != -1) {
+    if (trend_index != -1) {
         let name = data[trend_index].name;
-        if(name.includes("прямая")) {
+        if (name.includes("прямая")) {
             trend_type_select.selectedIndex = 1;
         }
     } else {
@@ -306,11 +327,11 @@ trend_type_select.addEventListener("change", onTrendTypeChangeListener);
 function onTrendTypeChangeListener() {
     let n = trend_type_select.selectedIndex;
     let value = trend_type_options[n].value;
-    trend_index = findTrendIndex();
+    trend_index = findTrendIndex(div_index, chart_info);
     if (value == 0 && trend_index != -1) {
         // тут удаляем тренд выбранной линии если есть
         data.splice(trend_index, 1);
-        trend_index = findTrendIndex();
+        trend_index = findTrendIndex(div_index, chart_info);
         newPlot();
         console.log("TREND INDEX " + trend_index);
         console.log("DATA LENGTH " + data.length);
@@ -335,7 +356,7 @@ function onTrendTypeChangeListener() {
             y.push(null);
         }
         addTrendToChart(x, y, chart_info + " тренд (прямая)");
-        trend_index = findTrendIndex();
+        trend_index = findTrendIndex(div_index, chart_info);
     }
 
     console.log("TREND INDEX " + trend_index);
@@ -348,7 +369,11 @@ function onTrendTypeChangeListener() {
             type: "scatter",
             mode: "lines+markers",
             connectgaps: true,
-            name: name
+            name: name,
+            line: {
+                dash: "dashdot",
+                color: colors[div_index]
+            }
         };
         // если какой-то тренд уже есть, заменяем его на новый
         if (trend_index == -1) {
@@ -369,11 +394,12 @@ function onTrendTypeChangeListener() {
     }
 }
 
-function findTrendIndex() {
+function findTrendIndex(div_index, chart_info) {
     let index = -1;
     for (let k = div_index + 1; k < data.length; k++) {
         if (data[k].name.includes(chart_info)) {
             index = k;
+            break;
         }
     }
     return index;
