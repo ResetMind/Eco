@@ -7,7 +7,6 @@ let chart_holder = document.querySelector("#chart_holder");
 let used_charts = document.querySelector(".used_charts");
 let add_button = document.querySelector(".add");
 let x_arr_sorted, y_arr_sorted, year_arr_sorted, new_win, data = new Array(),
-    data2 = new Array(),
     years = new Array(),
     div_index, chart_info, trend_index;
 let headers = window.opener.document.querySelectorAll("#invisible_table3_header th");
@@ -21,6 +20,9 @@ let checkboxes, checkall_checkbox, radios;
 let trend_type_select = document.querySelector("#trend_type");
 let trend_type_options = document.querySelectorAll("#trend_type option");
 let exp_number_input = document.querySelector("#exp");
+let predict_forward = document.querySelector("#forward");
+let predict_back = document.querySelector("#back");
+let predict_step = document.querySelector("#step");
 let colors = [
     "rgba(31, 119, 180, 0.5)",
     "rgba(255, 127, 14, 0.5)",
@@ -228,6 +230,10 @@ function openModal() {
     trend_index = findTrendIndex(div_index, chart_info);
     // надо отобразить параметры построенного тренда в комбо, если есть
     if (trend_index != -1) {
+        setPredictDisabled(false);
+        predict_back.value = data[trend_index].predict.back;
+        predict_forward.value = data[trend_index].predict.forward;
+        predict_step.value = data[trend_index].predict.step;
         let name = data[trend_index].name;
         if (name.includes("прямая")) {
             trend_type_select.selectedIndex = 1;
@@ -245,6 +251,10 @@ function openModal() {
     } else {
         trend_type_select.selectedIndex = 0;
         exp_number_input.disabled = true;
+        setPredictDisabled(true);
+        predict_back.value = "0";
+        predict_forward.value = "0";
+        predict_step.value = "1";
     }
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
@@ -279,6 +289,12 @@ function openModal() {
         checkall_checkbox.checked = true;
     }
     checkall_checkbox.addEventListener("change", onCheckboxChange);
+}
+
+function setPredictDisabled(flag) {
+    predict_back.disabled = flag;
+    predict_forward.disabled = flag;
+    predict_step.disabled = flag;
 }
 
 function onCheckboxChange() {
@@ -325,22 +341,44 @@ function onCheckboxChange() {
     function removeSpans(k, index) {
         data[index].x[k] = data[index].x[k].replace("<span>", "");
         data[index].x[k] = data[index].x[k].replace("</span>", "");
+        data[index].y[k] = data[index].y[k].replace("<span>", "");
+        data[index].y[k] = data[index].y[k].replace("</span>", "");
     }
 
     function addSpans(k, index) {
-        if (!data[index].x[k].includes("span")) {
+        if (!data[index].x[k].includes("span") && !data[index].y[k].includes("span")) {
             data[index].x[k] = "<span>" + data[index].x[k] + "</span>";
+            data[index].y[k] = "<span>" + data[index].y[k] + "</span>";
         }
     }
 }
 
-exp_number_input.addEventListener("change", onExpNumberChangeListener);
+exp_number_input.addEventListener("change", onTrendParamsChangeListener);
+predict_back.addEventListener("change", onTrendParamsChangeListener);
+predict_forward.addEventListener("change", onTrendParamsChangeListener);
+predict_step.addEventListener("change", onTrendParamsChangeListener);
 
-function onExpNumberChangeListener() {
-    if (exp_number_input.value < 2) {
-        exp_number_input.value = 2;
-    } else if (exp_number_input.value > 6) {
-        exp_number_input.value = 6;
+function onTrendParamsChangeListener() {
+    let e = window.event;
+    let input_number = e.currentTarget;
+    if (input_number.value < parseFloat(input_number.min)) {
+        input_number.value = parseFloat(input_number.min);
+    } else if (input_number.value > parseFloat(input_number.max)) {
+        input_number.value = parseFloat(input_number.max);
+    }
+    let arr = input_number.step.split(".");
+    let arr2 = input_number.value.split(".");
+    if (arr.length == 1) {
+        if (arr2.length != 1) {
+            input_number.value = parseFloat(arr2[0]);
+        }
+    } else {
+        if (arr2.length != 1) {
+            if (arr2[1].length > arr[1].length) {
+                let index = parseFloat(input_number.step.length);
+                input_number.value = parseFloat(input_number.value.substr(0, index));
+            }
+        }
     }
     onTrendTypeChangeListener();
 }
@@ -353,6 +391,7 @@ function onTrendTypeChangeListener() {
     trend_index = findTrendIndex(div_index, chart_info);
     if (value == 0 && trend_index != -1) {
         exp_number_input.disabled = true;
+        setPredictDisabled(true);
         // тут удаляем тренд выбранной линии если есть
         data.splice(trend_index, 1);
         trend_index = findTrendIndex(div_index, chart_info);
@@ -361,8 +400,13 @@ function onTrendTypeChangeListener() {
         console.log("DATA LENGTH " + data.length);
         return;
     }
+    setPredictDisabled(false);
+    let xy = new Array();
     let x = new Array();
     let y = new Array();
+    let back = parseFloat(predict_back.value);
+    let forward = parseFloat(predict_forward.value);
+    let step = parseFloat(predict_step.value);
     for (let k = 0; k < data[div_index].x.length; k++) {
         if (!data[div_index].x[k].includes("span")) {
             x.push(parseFloat(data[div_index].x[k]));
@@ -372,22 +416,26 @@ function onTrendTypeChangeListener() {
     if (value == 1) {
         exp_number_input.disabled = true;
         if (x.length != 0) {
-            y = linear(x, y);
+            xy = linear(x, y, back, forward, step);
+            x = xy[0];
+            y = xy[1];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, chart_info + " тренд (прямая)");
+        addTrendToChart(x, y, chart_info + " тренд (прямая)", back, forward, step);
         trend_index = findTrendIndex(div_index, chart_info);
     } else if (value == 2) {
         exp_number_input.disabled = true;
         if (x.length != 0) {
-            y = hyperbole(x, y);
+            xy = hyperbole(x, y, back, forward, step);
+            x = xy[0];
+            y = xy[1];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, chart_info + " тренд (гипербола)");
+        addTrendToChart(x, y, chart_info + " тренд (гипербола)", back, forward, step);
         trend_index = findTrendIndex(div_index, chart_info);
     } else if (value == 3) {
         exp_number_input.disabled = false;
@@ -399,22 +447,24 @@ function onTrendTypeChangeListener() {
         let name = chart_info + " тренд (парабола n=" + exp + ")";
         if (x.length != 0) {
             if (exp == 2) {
-                y = parabole2(x, y);
-            } else if(exp == 3) {
-                y = parabole3(x, y);
+                xy = parabole2(x, y, back, forward, step);
+            } else if (exp == 3) {
+                xy = parabole3(x, y, back, forward, step);
             }
+            x = xy[0];
+            y = xy[1];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, name);
+        addTrendToChart(x, y, name, back, forward, step);
         trend_index = findTrendIndex(div_index, chart_info);
     }
 
     console.log("TREND INDEX " + trend_index);
     console.log("DATA LENGTH " + data.length);
 
-    function addTrendToChart(x_arr, y_arr, name) {
+    function addTrendToChart(x_arr, y_arr, name, b, f, s) {
         let trace1 = {
             x: x_arr,
             y: y_arr,
@@ -426,6 +476,11 @@ function onTrendTypeChangeListener() {
                 dash: "dashdot",
                 color: colors[div_index],
                 shape: 'spline'
+            },
+            predict: {
+                back: b,
+                forward: f,
+                step: s
             }
         };
         // если какой-то тренд уже есть, заменяем его на новый

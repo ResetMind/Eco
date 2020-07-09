@@ -1,4 +1,4 @@
-function linear(x, y) {
+function linear(x, y, back, forward, step) {
     let a = create2DimArray(2);
     let b = new Array(2);
     a[0][0] = x.length;
@@ -17,16 +17,28 @@ function linear(x, y) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
     for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
     }
     function get_y_tr(x) {
         return coef[0] + coef[1] * x;
     }
-    return y_tr;
+    let xy = [x_tr, y_tr];
+    return xy;
 }
 
-function hyperbole(x, y) {
+function hyperbole(x, y, back, forward, step) {
     let a = create2DimArray(2);
     let b = new Array(2);
     a[0][0] = x.length;
@@ -45,16 +57,28 @@ function hyperbole(x, y) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
     for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
     }
     function get_y_tr(x) {
         return coef[0] + coef[1] * 1 / x;
     }
-    return y_tr;
+    let xy = [x_tr, y_tr];
+    return xy;
 }
 
-function parabole2(x, y) {
+function parabole2(x, y, back, forward, step) {
     let a = create2DimArray(3);
     let b = new Array(3);
     a[0][0] = x.length;
@@ -82,16 +106,28 @@ function parabole2(x, y) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
     for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
     }
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2);
     }
-    return y_tr;
+    let xy = [x_tr, y_tr];
+    return xy;
 }
 
-function parabole3(x, y) {
+function parabole3(x, y, back, forward, step) {
     let a = create2DimArray(4);
     let b = new Array(4);
     a[0][0] = x.length;
@@ -130,13 +166,25 @@ function parabole3(x, y) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
     for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
     }
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3);
     }
-    return y_tr;
+    let xy = [x_tr, y_tr];
+    return xy;
 }
 
 function holeckiy(a, b) {
