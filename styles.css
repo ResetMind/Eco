@@ -261,6 +261,10 @@ input[type="button"]:hover {
     float: right; 
 }
 
+.modal_body_right input[type="number"]:disabled {
+    opacity: 0.5;
+}
+
 /*input[type="number"] {
     background: #1f1f1f;
     border: 1px solid #3a3a3a;
