@@ -220,7 +220,7 @@ input[type="button"]:hover {
 .modal {
     opacity: 0;
     visibility: hidden;
-    width: 500px;
+    
     /*max-width: 500px;*/
     max-height: 500px;
     position: fixed;
@@ -251,8 +251,14 @@ input[type="button"]:hover {
     font-size: 14px;
 }
 
-#table_modal_right input[type="radio"] {
-    margin-left: 0px;
+.modal_body_right label {
+    float: left; 
+    padding: 5px 0px;
+}
+
+.modal_body_right select, 
+.modal_body_right input[type="number"] {
+    float: right; 
 }
 
 /*input[type="number"] {

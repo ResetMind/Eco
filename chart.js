@@ -20,6 +20,7 @@ let overlay = document.querySelector(".overlay");
 let checkboxes, checkall_checkbox, radios;
 let trend_type_select = document.querySelector("#trend_type");
 let trend_type_options = document.querySelectorAll("#trend_type option");
+let exp_number_input = document.querySelector("#exp");
 let colors = [
     "rgba(31, 119, 180, 0.5)",
     "rgba(255, 127, 14, 0.5)",
@@ -225,14 +226,25 @@ function openModal() {
     div_index = i;
     chart_info = div.querySelector(".chart_info").innerHTML;
     trend_index = findTrendIndex(div_index, chart_info);
-    // надо отобразить название построенного тренда в комбо, если есть
+    // надо отобразить параметры построенного тренда в комбо, если есть
     if (trend_index != -1) {
         let name = data[trend_index].name;
         if (name.includes("прямая")) {
             trend_type_select.selectedIndex = 1;
+            exp_number_input.disabled = true;
+        } else if (name.includes("гипербола")) {
+            trend_type_select.selectedIndex = 2;
+            exp_number_input.disabled = true;
+        } else if (name.includes("парабола")) {
+            trend_type_select.selectedIndex = 3;
+            exp_number_input.disabled = false;
+            let arr = name.split("n=");
+            let exp = arr[1].split(")")[0];
+            exp_number_input.value = exp;
         }
     } else {
         trend_type_select.selectedIndex = 0;
+        exp_number_input.disabled = true;
     }
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
@@ -322,6 +334,17 @@ function onCheckboxChange() {
     }
 }
 
+exp_number_input.addEventListener("change", onExpNumberChangeListener);
+
+function onExpNumberChangeListener() {
+    if (exp_number_input.value < 2) {
+        exp_number_input.value = 2;
+    } else if (exp_number_input.value > 6) {
+        exp_number_input.value = 6;
+    }
+    onTrendTypeChangeListener();
+}
+
 trend_type_select.addEventListener("change", onTrendTypeChangeListener);
 
 function onTrendTypeChangeListener() {
@@ -329,6 +352,7 @@ function onTrendTypeChangeListener() {
     let value = trend_type_options[n].value;
     trend_index = findTrendIndex(div_index, chart_info);
     if (value == 0 && trend_index != -1) {
+        exp_number_input.disabled = true;
         // тут удаляем тренд выбранной линии если есть
         data.splice(trend_index, 1);
         trend_index = findTrendIndex(div_index, chart_info);
@@ -346,6 +370,7 @@ function onTrendTypeChangeListener() {
         }
     }
     if (value == 1) {
+        exp_number_input.disabled = true;
         if (x.length != 0) {
             y = linear(x, y);
         } else {
@@ -354,7 +379,8 @@ function onTrendTypeChangeListener() {
         }
         addTrendToChart(x, y, chart_info + " тренд (прямая)");
         trend_index = findTrendIndex(div_index, chart_info);
-    } else if(value == 2) {
+    } else if (value == 2) {
+        exp_number_input.disabled = true;
         if (x.length != 0) {
             y = hyperbole(x, y);
         } else {
@@ -363,14 +389,25 @@ function onTrendTypeChangeListener() {
         }
         addTrendToChart(x, y, chart_info + " тренд (гипербола)");
         trend_index = findTrendIndex(div_index, chart_info);
-    } else if(value == 3) {
+    } else if (value == 3) {
+        exp_number_input.disabled = false;
+        let exp = exp_number_input.value;
+        if (exp < 2 || exp > 6) {
+            exp = 2;
+            exp_number_input.value = 2;
+        }
+        let name = chart_info + " тренд (парабола n=" + exp + ")";
         if (x.length != 0) {
-            y = parabole3(x, y);
+            if (exp == 2) {
+                y = parabole2(x, y);
+            } else if(exp == 3) {
+                y = parabole3(x, y);
+            }
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, chart_info + " тренд (парабола n=2)");
+        addTrendToChart(x, y, name);
         trend_index = findTrendIndex(div_index, chart_info);
     }
 
@@ -387,7 +424,8 @@ function onTrendTypeChangeListener() {
             name: name,
             line: {
                 dash: "dashdot",
-                color: colors[div_index]
+                color: colors[div_index],
+                shape: 'spline'
             }
         };
         // если какой-то тренд уже есть, заменяем его на новый
