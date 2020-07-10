@@ -94,8 +94,10 @@ function parabole2(x, y, back, forward, step) {
     }
     a[1][0] = a[0][1];
     a[1][1] = a[0][2];
+
     a[2][0] = a[1][1];
     a[2][1] = a[1][2];
+
     b[0] = 0;
     b[1] = 0;
     b[2] = 0;
@@ -148,12 +150,15 @@ function parabole3(x, y, back, forward, step) {
     a[1][0] = a[0][1];
     a[1][1] = a[0][2];
     a[1][2] = a[0][3];
+
     a[2][0] = a[1][1];
     a[2][1] = a[1][2];
     a[2][2] = a[1][3];
+
     a[3][0] = a[2][1];
     a[3][1] = a[2][2];
     a[3][2] = a[2][3];
+
     b[0] = 0;
     b[1] = 0;
     b[2] = 0;
@@ -182,6 +187,370 @@ function parabole3(x, y, back, forward, step) {
     }
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3);
+    }
+    let xy = [x_tr, y_tr];
+    return xy;
+}
+
+function parabole4(x, y, back, forward, step) {
+    let a = create2DimArray(5);
+    let b = new Array(5);
+    a[0][0] = x.length;
+    a[0][1] = 0;
+    a[0][2] = 0;
+    a[0][3] = 0;
+    a[0][4] = 0;
+    a[1][4] = 0;
+    a[2][4] = 0;
+    a[3][4] = 0;
+    a[4][4] = 0;
+    for(let i = 0; i < x.length; i++) {
+        a[0][1] += x[i];
+        a[0][2] += Math.pow(x[i], 2);
+        a[0][3] += Math.pow(x[i], 3);
+        a[0][4] += Math.pow(x[i], 4);
+        a[1][4] += Math.pow(x[i], 5);
+        a[2][4] += Math.pow(x[i], 6);
+        a[3][4] += Math.pow(x[i], 7);
+        a[4][4] += Math.pow(x[i], 8);
+    }
+    a[1][0] = a[0][1];
+    a[1][1] = a[0][2];
+    a[1][2] = a[0][3];
+    a[1][3] = a[0][4];
+
+    a[2][0] = a[1][1];
+    a[2][1] = a[1][2];
+    a[2][2] = a[1][3];
+    a[2][3] = a[1][4];
+
+    a[3][0] = a[2][1];
+    a[3][1] = a[2][2];
+    a[3][2] = a[2][3];
+    a[3][3] = a[2][4];
+
+    a[4][0] = a[3][1];
+    a[4][1] = a[3][2];
+    a[4][2] = a[3][3];
+    a[4][3] = a[3][4];
+
+    b[0] = 0;
+    b[1] = 0;
+    b[2] = 0;
+    b[3] = 0;
+    b[4] = 0;
+    for(let i = 0; i < y.length; i++) {
+        b[0] += y[i];
+        b[1] += y[i] * x[i];
+        b[2] += y[i] * Math.pow(x[i], 2);
+        b[3] += y[i] * Math.pow(x[i], 3);
+        b[4] += y[i] * Math.pow(x[i], 4);
+    }
+    let coef = holeckiy(a, b);
+    let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
+    for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
+        y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
+    }
+    function get_y_tr(x) {
+        return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3) + coef[4] * Math.pow(x, 4);
+    }
+    let xy = [x_tr, y_tr];
+    return xy;
+}
+
+function parabole5(x, y, back, forward, step) {
+    let a = create2DimArray(6);
+    let b = new Array(6);
+    a[0][0] = x.length;
+    a[0][1] = 0;
+    a[0][2] = 0;
+    a[0][3] = 0;
+    a[0][4] = 0;
+    a[0][5] = 0;
+    a[1][5] = 0;
+    a[2][5] = 0;
+    a[3][5] = 0;
+    a[4][5] = 0;
+    a[5][5] = 0;
+    for(let i = 0; i < x.length; i++) {
+        a[0][1] += x[i];
+        a[0][2] += Math.pow(x[i], 2);
+        a[0][3] += Math.pow(x[i], 3);
+        a[0][4] += Math.pow(x[i], 4);
+        a[0][5] += Math.pow(x[i], 5);
+        a[1][5] += Math.pow(x[i], 6);
+        a[2][5] += Math.pow(x[i], 7);
+        a[3][5] += Math.pow(x[i], 8);
+        a[4][5] += Math.pow(x[i], 9);
+        a[5][5] += Math.pow(x[i], 10);
+    }
+    a[1][0] = a[0][1];
+    a[1][1] = a[0][2];
+    a[1][2] = a[0][3];
+    a[1][3] = a[0][4];
+    a[1][4] = a[0][5];
+
+    a[2][0] = a[1][1];
+    a[2][1] = a[1][2];
+    a[2][2] = a[1][3];
+    a[2][3] = a[1][4];
+    a[2][4] = a[1][5];
+
+    a[3][0] = a[2][1];
+    a[3][1] = a[2][2];
+    a[3][2] = a[2][3];
+    a[3][3] = a[2][4];
+    a[3][4] = a[2][5];
+
+    a[4][0] = a[3][1];
+    a[4][1] = a[3][2];
+    a[4][2] = a[3][3];
+    a[4][3] = a[3][4];
+    a[4][4] = a[3][5];
+
+    a[5][0] = a[4][1];
+    a[5][1] = a[4][2];
+    a[5][2] = a[4][3];
+    a[5][3] = a[4][4];
+    a[5][4] = a[4][5];
+
+    b[0] = 0;
+    b[1] = 0;
+    b[2] = 0;
+    b[3] = 0;
+    b[4] = 0;
+    b[5] = 0;
+    for(let i = 0; i < y.length; i++) {
+        b[0] += y[i];
+        b[1] += y[i] * x[i];
+        b[2] += y[i] * Math.pow(x[i], 2);
+        b[3] += y[i] * Math.pow(x[i], 3);
+        b[4] += y[i] * Math.pow(x[i], 4);
+        b[5] += y[i] * Math.pow(x[i], 5);
+    }
+    let coef = holeckiy(a, b);
+    let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
+    for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
+        y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
+    }
+    function get_y_tr(x) {
+        return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3) + coef[4] * Math.pow(x, 4) + coef[5] * Math.pow(x, 5);
+    }
+    let xy = [x_tr, y_tr];
+    return xy;
+}
+
+function parabole6(x, y, back, forward, step) {
+    let a = create2DimArray(7);
+    let b = new Array(7);
+    a[0][0] = x.length;
+    a[0][1] = 0;
+    a[0][2] = 0;
+    a[0][3] = 0;
+    a[0][4] = 0;
+    a[0][5] = 0;
+    a[0][6] = 0;
+    a[1][6] = 0;
+    a[2][6] = 0;
+    a[3][6] = 0;
+    a[4][6] = 0;
+    a[5][6] = 0;
+    a[6][6] = 0;
+    for(let i = 0; i < x.length; i++) {
+        a[0][1] += x[i];
+        a[0][2] += Math.pow(x[i], 2);
+        a[0][3] += Math.pow(x[i], 3);
+        a[0][4] += Math.pow(x[i], 4);
+        a[0][5] += Math.pow(x[i], 5);
+        a[0][6] += Math.pow(x[i], 6);
+        a[1][6] += Math.pow(x[i], 7);
+        a[2][6] += Math.pow(x[i], 8);
+        a[3][6] += Math.pow(x[i], 9);
+        a[4][6] += Math.pow(x[i], 10);
+        a[5][6] += Math.pow(x[i], 11);
+        a[6][6] += Math.pow(x[i], 12);
+    }
+    a[1][0] = a[0][1];
+    a[1][1] = a[0][2];
+    a[1][2] = a[0][3];
+    a[1][3] = a[0][4];
+    a[1][4] = a[0][5];
+    a[1][5] = a[0][6];
+
+    a[2][0] = a[1][1];
+    a[2][1] = a[1][2];
+    a[2][2] = a[1][3];
+    a[2][3] = a[1][4];
+    a[2][4] = a[1][5];
+    a[2][5] = a[1][6];
+
+    a[3][0] = a[2][1];
+    a[3][1] = a[2][2];
+    a[3][2] = a[2][3];
+    a[3][3] = a[2][4];
+    a[3][4] = a[2][5];
+    a[3][5] = a[2][6];
+
+    a[4][0] = a[3][1];
+    a[4][1] = a[3][2];
+    a[4][2] = a[3][3];
+    a[4][3] = a[3][4];
+    a[4][4] = a[3][5];
+    a[4][5] = a[3][6];
+
+    a[5][0] = a[4][1];
+    a[5][1] = a[4][2];
+    a[5][2] = a[4][3];
+    a[5][3] = a[4][4];
+    a[5][4] = a[4][5];
+    a[5][5] = a[4][6];
+
+    a[6][0] = a[5][1];
+    a[6][1] = a[5][2];
+    a[6][2] = a[5][3];
+    a[6][3] = a[5][4];
+    a[6][4] = a[5][5];
+    a[6][5] = a[5][6];
+
+    b[0] = 0;
+    b[1] = 0;
+    b[2] = 0;
+    b[3] = 0;
+    b[4] = 0;
+    b[5] = 0;
+    b[6] = 0;
+    for(let i = 0; i < y.length; i++) {
+        b[0] += y[i];
+        b[1] += y[i] * x[i];
+        b[2] += y[i] * Math.pow(x[i], 2);
+        b[3] += y[i] * Math.pow(x[i], 3);
+        b[4] += y[i] * Math.pow(x[i], 4);
+        b[5] += y[i] * Math.pow(x[i], 5);
+        b[6] += y[i] * Math.pow(x[i], 6);
+    }
+    let coef = holeckiy(a, b);
+    let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
+    for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
+        y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
+    }
+    function get_y_tr(x) {
+        return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3) + coef[4] * Math.pow(x, 4) + coef[5] * Math.pow(x, 5) + coef[6] * Math.pow(x, 6);
+    }
+    let xy = [x_tr, y_tr];
+    return xy;
+}
+
+function exponent(x, y, back, forward, step) {
+    let a = create2DimArray(2);
+    let b = new Array(2);
+    a[0][0] = x.length;
+    a[0][1] = 0;
+    a[1][1] = 0;
+    for(let i = 0; i < x.length; i++) {
+        a[0][1] += x[i];
+        a[1][1] += Math.pow(x[i], 2);
+    }
+    a[1][0] = a[0][1];
+    b[0] = 0;
+    b[1] = 0;
+    for(let i = 0; i < y.length; i++) {
+        b[0] += Math.log(y[i]);
+        b[1] += Math.log(y[i]) * x[i];
+    }
+    let coef = holeckiy(a, b);
+    coef[0] = Math.exp(coef[0]); // мы находили с = ln_a1
+    let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
+    for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
+        y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
+    }
+    function get_y_tr(x) {
+        return coef[0] * Math.exp(coef[1] * x);
+    }
+    let xy = [x_tr, y_tr];
+    return xy;
+}
+
+function stepennaya(x, y, back, forward, step) {
+    let a = create2DimArray(2);
+    let b = new Array(2);
+    a[0][0] = x.length;
+    a[0][1] = 0;
+    a[1][1] = 0;
+    for(let i = 0; i < x.length; i++) {
+        a[0][1] += Math.log(x[i]);
+        a[1][1] += Math.pow(Math.log(x[i]), 2);
+    }
+    a[1][0] = a[0][1];
+    b[0] = 0;
+    b[1] = 0;
+    for(let i = 0; i < y.length; i++) {
+        b[0] += Math.log(y[i]);
+        b[1] += Math.log(y[i]) * Math.log(x[i]);
+    }
+    let coef = holeckiy(a, b);
+    coef[0] = Math.exp(coef[0]); // мы находили с = ln_a1
+    console.log(coef);
+    let y_tr = new Array();
+    let x_tr = new Array();
+    for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
+        x_tr.unshift(i);
+        y_tr.unshift(get_y_tr(i));
+    }
+    for(let i = 0; i < x.length; i++) {
+        x_tr.push(x[i]);
+        y_tr.push(get_y_tr(x[i]));
+    }
+    let last = x_tr[x_tr.length - 1];
+    for(let i = last + step; i <= last + forward * step; i += step) {
+        x_tr.push(i);
+        y_tr.push(get_y_tr(i));
+    }
+    function get_y_tr(x) {
+        return coef[0] * Math.pow(x, coef[1]);
     }
     let xy = [x_tr, y_tr];
     return xy;

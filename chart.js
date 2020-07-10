@@ -247,6 +247,12 @@ function openModal() {
             let arr = name.split("n=");
             let exp = arr[1].split(")")[0];
             exp_number_input.value = exp;
+        } else if (name.includes("экспонента")) {
+            trend_type_select.selectedIndex = 4;
+            exp_number_input.disabled = true;
+        } else if (name.includes("степенная")) {
+            trend_type_select.selectedIndex = 5;
+            exp_number_input.disabled = true;
         }
     } else {
         trend_type_select.selectedIndex = 0;
@@ -450,6 +456,12 @@ function onTrendTypeChangeListener() {
                 xy = parabole2(x, y, back, forward, step);
             } else if (exp == 3) {
                 xy = parabole3(x, y, back, forward, step);
+            } else if(exp == 4) {
+                xy = parabole4(x, y, back, forward, step);
+            } else if(exp == 5) {
+                xy = parabole5(x, y, back, forward, step);
+            } else if(exp == 6) {
+                xy = parabole6(x, y, back, forward, step);
             }
             x = xy[0];
             y = xy[1];
@@ -458,6 +470,30 @@ function onTrendTypeChangeListener() {
             y.push(null);
         }
         addTrendToChart(x, y, name, back, forward, step);
+        trend_index = findTrendIndex(div_index, chart_info);
+    } else if(value == 4) {
+        exp_number_input.disabled = true;
+        if (x.length != 0) {
+            xy = exponent(x, y, back, forward, step);
+            x = xy[0];
+            y = xy[1];
+        } else {
+            x.push(null);
+            y.push(null);
+        }
+        addTrendToChart(x, y, chart_info + " тренд (экспонента)", back, forward, step);
+        trend_index = findTrendIndex(div_index, chart_info);
+    } else if(value == 5) {
+        exp_number_input.disabled = true;
+        if (x.length != 0) {
+            xy = stepennaya(x, y, back, forward, step);
+            x = xy[0];
+            y = xy[1];
+        } else {
+            x.push(null);
+            y.push(null);
+        }
+        addTrendToChart(x, y, chart_info + " тренд (степенная)", back, forward, step);
         trend_index = findTrendIndex(div_index, chart_info);
     }
 
