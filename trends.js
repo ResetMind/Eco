@@ -17,6 +17,7 @@ function linear(x, y, back, forward, step) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -25,6 +26,7 @@ function linear(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -34,7 +36,7 @@ function linear(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] + coef[1] * x;
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -57,6 +59,7 @@ function hyperbole(x, y, back, forward, step) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -65,6 +68,7 @@ function hyperbole(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -74,7 +78,7 @@ function hyperbole(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] + coef[1] * 1 / x;
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -108,6 +112,7 @@ function parabole2(x, y, back, forward, step) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -116,6 +121,7 @@ function parabole2(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -125,7 +131,7 @@ function parabole2(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2);
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -171,6 +177,7 @@ function parabole3(x, y, back, forward, step) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -179,6 +186,7 @@ function parabole3(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -188,7 +196,7 @@ function parabole3(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3);
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -248,6 +256,7 @@ function parabole4(x, y, back, forward, step) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -256,6 +265,7 @@ function parabole4(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -265,7 +275,7 @@ function parabole4(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3) + coef[4] * Math.pow(x, 4);
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -341,6 +351,7 @@ function parabole5(x, y, back, forward, step) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -349,6 +360,7 @@ function parabole5(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -358,7 +370,7 @@ function parabole5(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3) + coef[4] * Math.pow(x, 4) + coef[5] * Math.pow(x, 5);
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -452,6 +464,7 @@ function parabole6(x, y, back, forward, step) {
     }
     let coef = holeckiy(a, b);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -460,6 +473,7 @@ function parabole6(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -469,7 +483,7 @@ function parabole6(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] + coef[1] * x + coef[2] * Math.pow(x, 2) + coef[3] * Math.pow(x, 3) + coef[4] * Math.pow(x, 4) + coef[5] * Math.pow(x, 5) + coef[6] * Math.pow(x, 6);
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -493,6 +507,7 @@ function exponent(x, y, back, forward, step) {
     let coef = holeckiy(a, b);
     coef[0] = Math.exp(coef[0]); // мы находили с = ln_a1
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -501,6 +516,7 @@ function exponent(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -510,7 +526,7 @@ function exponent(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] * Math.exp(coef[1] * x);
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
 }
 
@@ -535,6 +551,7 @@ function stepennaya(x, y, back, forward, step) {
     coef[0] = Math.exp(coef[0]); // мы находили с = ln_a1
     console.log(coef);
     let y_tr = new Array();
+    let y_tr_2 = new Array();
     let x_tr = new Array();
     for(let i = x[0] - step; i >= x[0] - back * step; i -= step) {
         x_tr.unshift(i);
@@ -543,6 +560,7 @@ function stepennaya(x, y, back, forward, step) {
     for(let i = 0; i < x.length; i++) {
         x_tr.push(x[i]);
         y_tr.push(get_y_tr(x[i]));
+        y_tr_2.push(get_y_tr(x[i]));
     }
     let last = x_tr[x_tr.length - 1];
     for(let i = last + step; i <= last + forward * step; i += step) {
@@ -552,8 +570,24 @@ function stepennaya(x, y, back, forward, step) {
     function get_y_tr(x) {
         return coef[0] * Math.pow(x, coef[1]);
     }
-    let xy = [x_tr, y_tr];
+    let xy = [x_tr, y_tr, r2(y, y_tr_2)];
     return xy;
+}
+
+function r2(y0, y1) {
+    let s_rem = 0;
+    let y_avg = 0;
+    for(let i = 0; i < y0.length; i++) {
+        s_rem += Math.pow(y1[i] - y0[i], 2);
+        y_avg += y0[i];
+    }
+    y_avg /= y0.length;
+    let s_reg = 0;
+    for(let i = 0; i < y0.length; i++) {
+        s_reg += Math.pow(y1[i] - y_avg, 2);
+    }
+    let s_full = s_reg + s_rem;
+    return 1 - s_rem / s_full;
 }
 
 function holeckiy(a, b) {

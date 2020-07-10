@@ -23,6 +23,8 @@ let exp_number_input = document.querySelector("#exp");
 let predict_forward = document.querySelector("#forward");
 let predict_back = document.querySelector("#back");
 let predict_step = document.querySelector("#step");
+let r2_label = document.querySelector("#r2_label");
+let r2_span = document.querySelector("#r2_span");
 let colors = [
     "rgba(31, 119, 180, 0.5)",
     "rgba(255, 127, 14, 0.5)",
@@ -234,6 +236,8 @@ function openModal() {
         predict_back.value = data[trend_index].predict.back;
         predict_forward.value = data[trend_index].predict.forward;
         predict_step.value = data[trend_index].predict.step;
+        r2_label.classList.add("active");
+        r2_span.innerHTML = data[trend_index].predict.r2;
         let name = data[trend_index].name;
         if (name.includes("прямая")) {
             trend_type_select.selectedIndex = 1;
@@ -261,6 +265,7 @@ function openModal() {
         predict_back.value = "0";
         predict_forward.value = "0";
         predict_step.value = "1";
+        r2_label.classList.remove("active");
     }
     let x_name = chart_info.split(" и ")[0];
     let y_name = chart_info.split(" и ")[1];
@@ -401,6 +406,7 @@ function onTrendTypeChangeListener() {
         // тут удаляем тренд выбранной линии если есть
         data.splice(trend_index, 1);
         trend_index = findTrendIndex(div_index, chart_info);
+        r2_label.classList.remove("active");
         newPlot();
         console.log("TREND INDEX " + trend_index);
         console.log("DATA LENGTH " + data.length);
@@ -410,6 +416,7 @@ function onTrendTypeChangeListener() {
     let xy = new Array();
     let x = new Array();
     let y = new Array();
+    let r2 = 0;
     let back = parseFloat(predict_back.value);
     let forward = parseFloat(predict_forward.value);
     let step = parseFloat(predict_step.value);
@@ -425,11 +432,12 @@ function onTrendTypeChangeListener() {
             xy = linear(x, y, back, forward, step);
             x = xy[0];
             y = xy[1];
+            r2 = xy[2];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, chart_info + " тренд (прямая)", back, forward, step);
+        addTrendToChart(x, y, chart_info + " тренд (прямая)", back, forward, step, r2);
         trend_index = findTrendIndex(div_index, chart_info);
     } else if (value == 2) {
         exp_number_input.disabled = true;
@@ -437,11 +445,12 @@ function onTrendTypeChangeListener() {
             xy = hyperbole(x, y, back, forward, step);
             x = xy[0];
             y = xy[1];
+            r2 = xy[2];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, chart_info + " тренд (гипербола)", back, forward, step);
+        addTrendToChart(x, y, chart_info + " тренд (гипербола)", back, forward, step, r2);
         trend_index = findTrendIndex(div_index, chart_info);
     } else if (value == 3) {
         exp_number_input.disabled = false;
@@ -465,11 +474,12 @@ function onTrendTypeChangeListener() {
             }
             x = xy[0];
             y = xy[1];
+            r2 = xy[2];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, name, back, forward, step);
+        addTrendToChart(x, y, name, back, forward, step, r2);
         trend_index = findTrendIndex(div_index, chart_info);
     } else if(value == 4) {
         exp_number_input.disabled = true;
@@ -477,11 +487,12 @@ function onTrendTypeChangeListener() {
             xy = exponent(x, y, back, forward, step);
             x = xy[0];
             y = xy[1];
+            r2 = xy[2];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, chart_info + " тренд (экспонента)", back, forward, step);
+        addTrendToChart(x, y, chart_info + " тренд (экспонента)", back, forward, step, r2);
         trend_index = findTrendIndex(div_index, chart_info);
     } else if(value == 5) {
         exp_number_input.disabled = true;
@@ -489,18 +500,21 @@ function onTrendTypeChangeListener() {
             xy = stepennaya(x, y, back, forward, step);
             x = xy[0];
             y = xy[1];
+            r2 = xy[2];
         } else {
             x.push(null);
             y.push(null);
         }
-        addTrendToChart(x, y, chart_info + " тренд (степенная)", back, forward, step);
+        addTrendToChart(x, y, chart_info + " тренд (степенная)", back, forward, step, r2);
         trend_index = findTrendIndex(div_index, chart_info);
     }
+    r2_label.classList.add("active");
+    r2_span.innerHTML = data[trend_index].predict.r2;
 
     console.log("TREND INDEX " + trend_index);
     console.log("DATA LENGTH " + data.length);
 
-    function addTrendToChart(x_arr, y_arr, name, b, f, s) {
+    function addTrendToChart(x_arr, y_arr, name, b, f, s, r) {
         let trace1 = {
             x: x_arr,
             y: y_arr,
@@ -516,7 +530,8 @@ function onTrendTypeChangeListener() {
             predict: {
                 back: b,
                 forward: f,
-                step: s
+                step: s,
+                r2: r.toFixed(3)
             }
         };
         // если какой-то тренд уже есть, заменяем его на новый

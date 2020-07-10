@@ -265,6 +265,11 @@ input[type="button"]:hover {
     opacity: 0.5;
 }
 
+#r2_label {
+    opacity: 0;
+    visibility: hidden;
+}
+
 /*input[type="number"] {
     background: #1f1f1f;
     border: 1px solid #3a3a3a;
@@ -274,7 +279,8 @@ input[type="button"]:hover {
 }*/
 
 .modal.active,
-.overlay.active {
+.overlay.active,
+#r2_label.active {
     opacity: 1;
     visibility: visible;
 }
